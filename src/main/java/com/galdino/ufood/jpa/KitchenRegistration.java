@@ -2,6 +2,7 @@ package com.galdino.ufood.jpa;
 
 import com.galdino.ufood.domain.model.Kitchen;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,5 +15,10 @@ public class KitchenRegistration {
 
     public List<Kitchen> list() {
         return manager.createQuery("from Kitchen", Kitchen.class).getResultList();
+    }
+
+    @Transactional
+    public Kitchen add(Kitchen kitchen) {
+        return manager.merge(kitchen);
     }
 }
