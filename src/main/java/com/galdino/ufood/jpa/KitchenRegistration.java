@@ -25,4 +25,10 @@ public class KitchenRegistration {
     public Kitchen add(Kitchen kitchen) {
         return manager.merge(kitchen);
     }
+
+    @Transactional
+    public void delete(Kitchen kitchen) {
+        kitchen = findById(kitchen.getId());
+        manager.remove(kitchen);
+    }
 }
