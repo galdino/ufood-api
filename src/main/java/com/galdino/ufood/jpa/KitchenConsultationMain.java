@@ -2,6 +2,7 @@ package com.galdino.ufood.jpa;
 
 import com.galdino.ufood.UfoodApiApplication;
 import com.galdino.ufood.domain.model.Kitchen;
+import com.galdino.ufood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -13,9 +14,9 @@ public class KitchenConsultationMain {
         ApplicationContext applicationContext = new SpringApplicationBuilder(UfoodApiApplication.class)
                                                         .web(WebApplicationType.NONE)
                                                         .run(args);
-        KitchenRegistration kitchenRegistration = applicationContext.getBean(KitchenRegistration.class);
+        KitchenRepository kitchenRepository = applicationContext.getBean(KitchenRepository.class);
 
-        List<Kitchen> kitchens = kitchenRegistration.list();
+        List<Kitchen> kitchens = kitchenRepository.list();
         kitchens.forEach(kitchen -> System.out.println(kitchen.getName()));
     }
 }
