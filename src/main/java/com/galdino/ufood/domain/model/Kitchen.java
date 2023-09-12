@@ -1,6 +1,5 @@
 package com.galdino.ufood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +17,7 @@ public class Kitchen {
     private Long id;
 
 //    @JsonIgnore
-    @JsonProperty("title")
+//    @JsonProperty("title")
     @Column(nullable = false)
     private String name;
 
