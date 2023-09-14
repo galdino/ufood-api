@@ -38,7 +38,7 @@ public class KitchenController {
         Kitchen kitchen = kitchenRepository.findById(id);
 
 //        return ResponseEntity.status(HttpStatus.OK).body(kitchen);
-        return ResponseEntity.ok(kitchen);
+//        return ResponseEntity.ok(kitchen);
 
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.add(HttpHeaders.LOCATION, "http://localhost:8080/kitchens/");
@@ -46,5 +46,11 @@ public class KitchenController {
 //        return ResponseEntity.status(HttpStatus.FOUND)
 //                             .headers(httpHeaders)
 //                             .build();
+
+        if (kitchen == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(kitchen);
     }
 }
