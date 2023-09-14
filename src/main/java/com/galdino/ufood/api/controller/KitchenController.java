@@ -3,9 +3,12 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.api.model.KitchensXmlWrapper;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,9 +32,19 @@ public class KitchenController {
         return new KitchensXmlWrapper(kitchenRepository.list());
     }
 
-    @ResponseStatus(HttpStatus.OK)
+//    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}")
-    public Kitchen findById(@PathVariable Long id) {
-        return kitchenRepository.findById(id);
+    public ResponseEntity<Kitchen> findById(@PathVariable Long id) {
+        Kitchen kitchen = kitchenRepository.findById(id);
+
+//        return ResponseEntity.status(HttpStatus.OK).body(kitchen);
+        return ResponseEntity.ok(kitchen);
+
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(HttpHeaders.LOCATION, "http://localhost:8080/kitchens/");
+//
+//        return ResponseEntity.status(HttpStatus.FOUND)
+//                             .headers(httpHeaders)
+//                             .build();
     }
 }
