@@ -4,6 +4,7 @@ import com.galdino.ufood.api.model.KitchensXmlWrapper;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -74,5 +75,21 @@ public class KitchenController {
 
         return ResponseEntity.status(HttpStatus.OK).body(kitchenAux);
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Kitchen> delete(@PathVariable Long id) {
+        try {
+            Kitchen kitchen = kitchenRepository.findById(id);
+
+            if (kitchen == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            kitchenRepository.delete(kitchen);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }
