@@ -3,6 +3,7 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.api.model.KitchensXmlWrapper;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +58,21 @@ public class KitchenController {
         Kitchen kitchenAux = kitchenRepository.add(kitchen);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(kitchenAux);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
+        Kitchen kitchenAux = kitchenRepository.findById(id);
+
+        if (kitchenAux == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        BeanUtils.copyProperties(kitchen, kitchenAux, "id");
+
+        kitchenAux = kitchenRepository.add(kitchenAux);
+
+        return ResponseEntity.status(HttpStatus.OK).body(kitchenAux);
+
     }
 }
