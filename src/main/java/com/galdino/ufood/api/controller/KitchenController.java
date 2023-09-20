@@ -1,16 +1,17 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.model.KitchensXmlWrapper;
+import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.service.KitchenRegisterService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -83,15 +84,12 @@ public class KitchenController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Kitchen> delete(@PathVariable Long id) {
         try {
-            Kitchen kitchen = kitchenRepository.findById(id);
-
-            if (kitchen == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            kitchenRepository.delete(kitchen);
+            kitchenRegisterService.remove(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (DataIntegrityViolationException e) {
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (EntityInUseException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }

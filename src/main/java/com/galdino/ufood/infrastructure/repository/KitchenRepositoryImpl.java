@@ -2,6 +2,7 @@ package com.galdino.ufood.infrastructure.repository;
 
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,13 @@ public class KitchenRepositoryImpl implements KitchenRepository {
 
     @Transactional
     @Override
-    public void delete(Kitchen kitchen) {
-        kitchen = findById(kitchen.getId());
+    public void delete(Long id) {
+        Kitchen kitchen = findById(id);
+
+        if (kitchen == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         manager.remove(kitchen);
     }
 }
