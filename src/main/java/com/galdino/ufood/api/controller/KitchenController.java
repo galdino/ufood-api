@@ -3,6 +3,7 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.api.model.KitchensXmlWrapper;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
+import com.galdino.ufood.domain.service.KitchenRegisterService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,11 @@ import java.util.List;
 public class KitchenController {
 
     private KitchenRepository kitchenRepository;
+    private KitchenRegisterService kitchenRegisterService;
 
-    public KitchenController(KitchenRepository kitchenRepository) {
+    public KitchenController(KitchenRepository kitchenRepository, KitchenRegisterService kitchenRegisterService) {
         this.kitchenRepository = kitchenRepository;
+        this.kitchenRegisterService = kitchenRegisterService;
     }
 
     @GetMapping
@@ -56,7 +59,7 @@ public class KitchenController {
 
     @PostMapping
     public ResponseEntity<Kitchen> add(@RequestBody Kitchen kitchen) {
-        Kitchen kitchenAux = kitchenRepository.add(kitchen);
+        Kitchen kitchenAux = kitchenRegisterService.add(kitchen);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(kitchenAux);
     }
