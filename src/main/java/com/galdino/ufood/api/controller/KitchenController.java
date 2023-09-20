@@ -75,7 +75,7 @@ public class KitchenController {
 
         BeanUtils.copyProperties(kitchen, kitchenAux, "id");
 
-        kitchenAux = kitchenRepository.add(kitchenAux);
+        kitchenAux = kitchenRegisterService.add(kitchenAux);
 
         return ResponseEntity.status(HttpStatus.OK).body(kitchenAux);
 
