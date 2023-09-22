@@ -27,6 +27,8 @@ public class RestaurantRegisterService {
             throw new EntityNotFoundException(String.format("Unable to find kitchen with id %d", kitchenId));
         }
 
+        restaurant.setKitchen(kitchen);
+
         return restaurantRepository.add(restaurant);
     }
 }

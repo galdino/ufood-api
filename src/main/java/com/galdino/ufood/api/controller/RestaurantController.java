@@ -3,6 +3,7 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,25 @@ public class RestaurantController {
             Restaurant restaurantAux = restaurantRegisterService.add(restaurant);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(restaurantAux);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+        Restaurant restaurantAux = restaurantRepository.findById(id);
+
+        if (restaurantAux == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        BeanUtils.copyProperties(restaurant, restaurantAux, "id");
+
+        try {
+            restaurantAux = restaurantRegisterService.add(restaurantAux);
+
+            return ResponseEntity.status(HttpStatus.OK).body(restaurantAux);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
