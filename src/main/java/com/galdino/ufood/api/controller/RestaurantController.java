@@ -2,13 +2,12 @@ package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
+import com.galdino.ufood.domain.service.RestaurantRegisterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -16,9 +15,11 @@ import java.util.List;
 public class RestaurantController {
 
     private RestaurantRepository restaurantRepository;
+    private RestaurantRegisterService restaurantRegisterService;
 
-    public RestaurantController(RestaurantRepository restaurantRepository) {
+    public RestaurantController(RestaurantRepository restaurantRepository, RestaurantRegisterService restaurantRegisterService) {
         this.restaurantRepository = restaurantRepository;
+        this.restaurantRegisterService = restaurantRegisterService;
     }
 
     @GetMapping
@@ -35,5 +36,16 @@ public class RestaurantController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(restaurant);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> add(@RequestBody Restaurant restaurant) {
+        try {
+            Restaurant restaurantAux = restaurantRegisterService.add(restaurant);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(restaurantAux);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
