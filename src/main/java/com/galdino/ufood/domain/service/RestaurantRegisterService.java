@@ -4,6 +4,7 @@ import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -30,5 +31,13 @@ public class RestaurantRegisterService {
         restaurant.setKitchen(kitchen);
 
         return restaurantRepository.add(restaurant);
+    }
+
+    public void remove(Long id) {
+        try {
+            restaurantRepository.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(String.format("Unable to find restaurant with id %d", id));
+        }
     }
 }

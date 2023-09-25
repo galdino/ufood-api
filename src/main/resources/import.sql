@@ -8,3 +8,5 @@ insert into restaurant (name, delivery_fee, kitchen_id) values ('Tuk Tuk Indian 
 insert into state (id, name) values (1, 'CA');
 insert into state (id, name) values (2, 'FL');
 insert into state (id, name) values (3, 'NY');
+
+insert into city (name, state_id) values ('Los Angeles', 1);

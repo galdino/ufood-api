@@ -1,7 +1,7 @@
 package com.galdino.ufood.infrastructure.repository;
 
-import com.galdino.ufood.domain.model.Restaurant;
-import com.galdino.ufood.domain.repository.RestaurantRepository;
+import com.galdino.ufood.domain.model.City;
+import com.galdino.ufood.domain.repository.CityRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,35 +11,36 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class RestaurantRepositoryImpl implements RestaurantRepository {
+public class CityRepositoryImpl implements CityRepository {
+
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public List<Restaurant> list() {
-        return manager.createQuery("from Restaurant", Restaurant.class).getResultList();
+    public List<City> list() {
+        return manager.createQuery("from City", City.class).getResultList();
     }
 
     @Override
-    public Restaurant findById(Long id) {
-        return manager.find(Restaurant.class, id);
+    public City findById(Long id) {
+        return manager.find(City.class, id);
     }
 
     @Transactional
     @Override
-    public Restaurant add(Restaurant restaurant) {
-        return manager.merge(restaurant);
+    public City add(City city) {
+        return manager.merge(city);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        Restaurant restaurant = findById(id);
+        City city = findById(id);
 
-        if (restaurant == null) {
+        if (city == null) {
             throw new EmptyResultDataAccessException(1);
         }
 
-        manager.remove(restaurant);
+        manager.remove(city);
     }
 }

@@ -2,6 +2,7 @@ package com.galdino.ufood.infrastructure.repository;
 
 import com.galdino.ufood.domain.model.State;
 import com.galdino.ufood.domain.repository.StateRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,13 @@ public class StateRepositoryImpl implements StateRepository {
 
     @Transactional
     @Override
-    public void delete(State state) {
-        state = findById(state.getId());
+    public void delete(Long id) {
+        State state = findById(id);
+
+        if (state == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         manager.remove(state);
     }
 }
