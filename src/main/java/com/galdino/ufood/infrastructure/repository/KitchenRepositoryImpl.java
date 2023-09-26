@@ -21,6 +21,13 @@ public class KitchenRepositoryImpl implements KitchenRepository {
     }
 
     @Override
+    public List<Kitchen> findByName(String name) {
+        return manager.createQuery("from Kitchen where name like :name", Kitchen.class)
+                      .setParameter("name", "%" + name + "%")
+                      .getResultList();
+    }
+
+    @Override
     public Kitchen findById(Long id) {
         return manager.find(Kitchen.class, id);
     }
