@@ -1,13 +1,10 @@
 package com.galdino.ufood.domain.repository;
 
 import com.galdino.ufood.domain.model.Kitchen;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface KitchenRepository {
-    List<Kitchen> list();
-    List<Kitchen> findByName(String name);
-    Kitchen findById(Long id);
-    Kitchen add(Kitchen kitchen);
-    void delete(Long id);
+@Repository
+public interface KitchenRepository extends JpaRepository<Kitchen, Long> {
+//    List<Kitchen> findByName(String name);
 }

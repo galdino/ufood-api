@@ -22,11 +22,8 @@ public class RestaurantRegisterService {
 
     public Restaurant add(Restaurant restaurant) {
         Long kitchenId = restaurant.getKitchen().getId();
-        Kitchen kitchen = kitchenRepository.findById(kitchenId);
-
-        if (kitchen == null) {
-            throw new EntityNotFoundException(String.format("Unable to find kitchen with id %d", kitchenId));
-        }
+        Kitchen kitchen = kitchenRepository.findById(kitchenId)
+                                           .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find kitchen with id %d", kitchenId)));
 
         restaurant.setKitchen(kitchen);
 

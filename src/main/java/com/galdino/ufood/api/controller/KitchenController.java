@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/kitchens")
@@ -28,18 +29,18 @@ public class KitchenController {
 
     @GetMapping
     public List<Kitchen> list() {
-        return kitchenRepository.list();
+        return kitchenRepository.findAll();
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public KitchensXmlWrapper listXml() {
-        return new KitchensXmlWrapper(kitchenRepository.list());
+        return new KitchensXmlWrapper(kitchenRepository.findAll());
     }
 
 //    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}")
     public ResponseEntity<Kitchen> findById(@PathVariable Long id) {
-        Kitchen kitchen = kitchenRepository.findById(id);
+        Optional<Kitchen> kitchen = kitchenRepository.findById(id);
 
 //        return ResponseEntity.status(HttpStatus.OK).body(kitchen);
 //        return ResponseEntity.ok(kitchen);
@@ -51,11 +52,11 @@ public class KitchenController {
 //                             .headers(httpHeaders)
 //                             .build();
 
-        if (kitchen == null) {
+        if (kitchen.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(kitchen);
+        return ResponseEntity.ok(kitchen.get());
     }
 
     @PostMapping
@@ -67,17 +68,17 @@ public class KitchenController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-        Kitchen kitchenAux = kitchenRepository.findById(id);
+        Optional<Kitchen> kitchenAux = kitchenRepository.findById(id);
 
-        if (kitchenAux == null) {
+        if (kitchenAux.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        BeanUtils.copyProperties(kitchen, kitchenAux, "id");
+        BeanUtils.copyProperties(kitchen, kitchenAux.get(), "id");
 
-        kitchenAux = kitchenRegisterService.add(kitchenAux);
+        Kitchen added = kitchenRegisterService.add(kitchenAux.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body(kitchenAux);
+        return ResponseEntity.status(HttpStatus.OK).body(added);
 
     }
 

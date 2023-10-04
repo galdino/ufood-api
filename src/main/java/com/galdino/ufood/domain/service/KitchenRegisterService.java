@@ -18,12 +18,12 @@ public class KitchenRegisterService {
     }
 
     public Kitchen add(Kitchen kitchen) {
-        return kitchenRepository.add(kitchen);
+        return kitchenRepository.save(kitchen);
     }
 
     public void remove(Long id) {
         try {
-            kitchenRepository.delete(id);
+            kitchenRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Unable to find kitchen with id %d", id));
         } catch (DataIntegrityViolationException e) {
