@@ -17,7 +17,7 @@ public class KitchenDeleteMain {
         Kitchen kitchen = new Kitchen();
         kitchen.setId(1L);
 
-        kitchenRepository.delete(kitchen.getId());
+//        kitchenRepository.delete(kitchen.getId());
 
     }
 }

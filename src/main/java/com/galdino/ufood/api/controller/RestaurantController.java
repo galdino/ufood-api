@@ -14,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/restaurants")
@@ -29,18 +30,18 @@ public class RestaurantController {
 
     @GetMapping
     public List<Restaurant> list() {
-        return restaurantRepository.list();
+        return restaurantRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> findById(@PathVariable Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id);
+        Optional<Restaurant> restaurant = restaurantRepository.findById(id);
 
-        if (restaurant == null) {
+        if (restaurant.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(restaurant);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurant.get());
     }
 
     @PostMapping
@@ -56,18 +57,18 @@ public class RestaurantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-        Restaurant restaurantAux = restaurantRepository.findById(id);
+        Optional<Restaurant> restaurantAux = restaurantRepository.findById(id);
 
-        if (restaurantAux == null) {
+        if (restaurantAux.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        BeanUtils.copyProperties(restaurant, restaurantAux, "id");
+        BeanUtils.copyProperties(restaurant, restaurantAux.get(), "id");
 
         try {
-            restaurantAux = restaurantRegisterService.add(restaurantAux);
+            Restaurant added = restaurantRegisterService.add(restaurantAux.get());
 
-            return ResponseEntity.status(HttpStatus.OK).body(restaurantAux);
+            return ResponseEntity.status(HttpStatus.OK).body(added);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -86,15 +87,15 @@ public class RestaurantController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        Restaurant restaurantAux = restaurantRepository.findById(id);
+        Optional<Restaurant> restaurantAux = restaurantRepository.findById(id);
 
-        if (restaurantAux == null) {
+        if (restaurantAux.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        merge(fields, restaurantAux);
+        merge(fields, restaurantAux.get());
 
-        return update(id, restaurantAux);
+        return update(id, restaurantAux.get());
     }
 
     private void merge(Map<String, Object> fields, Restaurant restaurantAux) {

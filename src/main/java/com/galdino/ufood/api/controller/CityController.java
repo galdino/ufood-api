@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cities")
@@ -25,18 +26,18 @@ public class CityController {
 
     @GetMapping
     public List<City> list() {
-        return cityRepository.list();
+        return cityRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<City> findById(@PathVariable Long id) {
-        City city = cityRepository.findById(id);
+        Optional<City> city = cityRepository.findById(id);
 
-        if (city == null) {
+        if (city.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(city);
+        return ResponseEntity.status(HttpStatus.OK).body(city.get());
     }
 
     @PostMapping
@@ -51,17 +52,17 @@ public class CityController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
-        City cityAux = cityRepository.findById(id);
+        Optional<City> cityAux = cityRepository.findById(id);
 
-        if (cityAux == null) {
+        if (cityAux.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        BeanUtils.copyProperties(city, cityAux, "id");
+        BeanUtils.copyProperties(city, cityAux.get(), "id");
 
         try {
-            cityAux = cityRegisterService.add(cityAux);
-            return ResponseEntity.status(HttpStatus.OK).body(cityAux);
+            City added = cityRegisterService.add(cityAux.get());
+            return ResponseEntity.status(HttpStatus.OK).body(added);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

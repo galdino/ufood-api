@@ -20,8 +20,8 @@ public class KitchenAddMain {
         Kitchen kitchen2 = new Kitchen();
         kitchen2.setName("Japanese");
 
-        kitchen1 = kitchenRepository.add(kitchen1);
-        kitchen2 = kitchenRepository.add(kitchen2);
+//        kitchen1 = kitchenRepository.add(kitchen1);
+//        kitchen2 = kitchenRepository.add(kitchen2);
 
         System.out.printf("%d - %s\n", kitchen1.getId(), kitchen1.getName());
         System.out.printf("%d - %s\n", kitchen2.getId(), kitchen2.getName());

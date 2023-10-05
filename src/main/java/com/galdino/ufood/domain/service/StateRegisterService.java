@@ -18,12 +18,12 @@ public class StateRegisterService {
     }
 
     public State add(State state) {
-        return stateRepository.add(state);
+        return stateRepository.save(state);
     }
 
     public void remove(Long id) {
         try {
-            stateRepository.delete(id);
+            stateRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Unable to find state with id %d", id));
         } catch (DataIntegrityViolationException e) {

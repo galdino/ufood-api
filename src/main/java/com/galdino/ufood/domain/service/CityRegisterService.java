@@ -22,19 +22,16 @@ public class CityRegisterService {
 
     public City add(City city) {
         Long stateId = city.getState().getId();
-        State state = stateRepository.findById(stateId);
-
-        if (state == null) {
-            throw new EntityNotFoundException(String.format("Unable to find state with id %d", stateId));
-        }
+        State state = stateRepository.findById(stateId)
+                                     .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find state with id %d", stateId)));
 
         city.setState(state);
-        return cityRepository.add(city);
+        return cityRepository.save(city);
     }
 
     public void remove(Long id) {
         try {
-            cityRepository.delete(id);
+            cityRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Unable to find city with id %d", id));
         }

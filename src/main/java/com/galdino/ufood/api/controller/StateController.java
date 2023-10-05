@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/states")
@@ -26,18 +27,18 @@ public class StateController {
 
     @GetMapping
     public List<State> list() {
-        return stateRepository.list();
+        return stateRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<State> findById(@PathVariable Long id) {
-        State state = stateRepository.findById(id);
+        Optional<State> state = stateRepository.findById(id);
 
-        if (state == null) {
+        if (state.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(state);
+        return ResponseEntity.status(HttpStatus.OK).body(state.get());
     }
 
     @PostMapping
@@ -49,16 +50,16 @@ public class StateController {
 
     @PutMapping("/{id}")
     public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state) {
-        State stateAux = stateRepository.findById(id);
+        Optional<State> stateAux = stateRepository.findById(id);
 
-        if (stateAux == null) {
+        if (stateAux.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        BeanUtils.copyProperties(state, stateAux, "id");
-        stateAux = stateRegisterService.add(stateAux);
+        BeanUtils.copyProperties(state, stateAux.get(), "id");
+        State added = stateRegisterService.add(stateAux.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body(stateAux);
+        return ResponseEntity.status(HttpStatus.OK).body(added);
 
     }
 

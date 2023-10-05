@@ -1,12 +1,9 @@
 package com.galdino.ufood.domain.repository;
 
 import com.galdino.ufood.domain.model.Restaurant;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface RestaurantRepository {
-    List<Restaurant> list();
-    Restaurant findById(Long id);
-    Restaurant add(Restaurant restaurant);
-    void delete(Long id);
+@Repository
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 }

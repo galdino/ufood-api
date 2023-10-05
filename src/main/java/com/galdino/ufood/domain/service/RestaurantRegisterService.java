@@ -27,12 +27,12 @@ public class RestaurantRegisterService {
 
         restaurant.setKitchen(kitchen);
 
-        return restaurantRepository.add(restaurant);
+        return restaurantRepository.save(restaurant);
     }
 
     public void remove(Long id) {
         try {
-            restaurantRepository.delete(id);
+            restaurantRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Unable to find restaurant with id %d", id));
         }

@@ -18,7 +18,7 @@ public class KitchenUpdateMain {
         kitchen.setId(1L);
         kitchen.setName("Brazilian");
 
-        kitchenRepository.add(kitchen);
+//        kitchenRepository.add(kitchen);
 
     }
 }

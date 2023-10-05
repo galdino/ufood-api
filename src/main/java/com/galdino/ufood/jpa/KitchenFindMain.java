@@ -1,7 +1,6 @@
 package com.galdino.ufood.jpa;
 
 import com.galdino.ufood.UfoodApiApplication;
-import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,7 +13,7 @@ public class KitchenFindMain {
                                                         .run(args);
         KitchenRepository kitchenRepository = applicationContext.getBean(KitchenRepository.class);
 
-        Kitchen kitchen = kitchenRepository.findById(1L);
-        System.out.println(kitchen.getName());
+//        Kitchen kitchen = kitchenRepository.findById(1L);
+//        System.out.println(kitchen.getName());
     }
 }
