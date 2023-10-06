@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/test")
@@ -29,13 +30,33 @@ public class TestController {
         return kitchenRepository.findByNameContaining(name);
     }
 
+    @GetMapping("/kitchens/exists")
+    public boolean kitchenExists(String name) {
+        return kitchenRepository.existsByName(name);
+    }
+
     @GetMapping("/restaurants")
     public List<Restaurant> findDeliveryFee(BigDecimal initialFee, BigDecimal finalFee) {
-        return restaurantRepository.findByDeliveryFeeBetween(initialFee, finalFee);
+        return restaurantRepository.queryByDeliveryFeeBetween(initialFee, finalFee);
     }
 
     @GetMapping("/restaurants/by-name")
     public List<Restaurant> findByNameAndKitchen(String name, Long kitchenId) {
         return restaurantRepository.findByNameContainingAndKitchenId(name, kitchenId);
+    }
+
+    @GetMapping("/restaurants/first-by-name")
+    public Optional<Restaurant> findFirstByName(String name) {
+        return restaurantRepository.findFirstRestaurantByNameContaining(name);
+    }
+
+    @GetMapping("/restaurants/top-by-name")
+    public List<Restaurant> findTopByName(String name) {
+        return restaurantRepository.findTop2ByNameContaining(name);
+    }
+
+    @GetMapping("/restaurants/count")
+    public int countByKitchen(Long kitchenId) {
+        return restaurantRepository.countByKitchenId(kitchenId);
     }
 }
