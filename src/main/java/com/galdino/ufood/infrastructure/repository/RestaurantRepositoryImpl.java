@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -27,11 +28,21 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
         CriteriaQuery<Restaurant> criteria = builder.createQuery(Restaurant.class);
         Root<Restaurant> root = criteria.from(Restaurant.class);
 
-        Predicate namePredicate = builder.like(root.get("name"), "%" + name + "%");
-        Predicate initialFeePredicate = builder.greaterThanOrEqualTo(root.get("deliveryFee"), initialFee);
-        Predicate finalFeePredicate = builder.lessThanOrEqualTo(root.get("deliveryFee"), finalFee);
+        var predicates = new ArrayList<Predicate>();
 
-        criteria.where(namePredicate, initialFeePredicate, finalFeePredicate);
+        if (name != null && !"".equals(name.trim())) {
+            predicates.add(builder.like(root.get("name"), "%" + name + "%"));
+        }
+
+        if (initialFee != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("deliveryFee"), initialFee));
+        }
+
+        if (finalFee != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("deliveryFee"), finalFee));
+        }
+
+        criteria.where(predicates.toArray(new Predicate[0]));
 
         TypedQuery<Restaurant> query = entityManager.createQuery(criteria);
 
