@@ -4,6 +4,8 @@ import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
+import com.galdino.ufood.infrastructure.repository.spec.RestaurantWithFreeDeliverySpec;
+import com.galdino.ufood.infrastructure.repository.spec.RestaurantWithNameSpec;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,5 +65,13 @@ public class TestController {
     @GetMapping("/restaurants/count")
     public int countByKitchen(Long kitchenId) {
         return restaurantRepository.countByKitchenId(kitchenId);
+    }
+
+    @GetMapping("/restaurants/free-delivery")
+    public List<Restaurant> findFreeDelivery(String name) {
+        var withFreeDelivery = new RestaurantWithFreeDeliverySpec();
+        var withName = new RestaurantWithNameSpec(name);
+
+        return restaurantRepository.findAll(withFreeDelivery.and(withName));
     }
 }
