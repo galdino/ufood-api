@@ -1,7 +1,10 @@
 package com.galdino.ufood.infrastructure.repository;
 
 import com.galdino.ufood.domain.model.Restaurant;
+import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.repository.RestaurantRepositoryQueries;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,11 +18,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.galdino.ufood.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
+import static com.galdino.ufood.infrastructure.repository.spec.RestaurantSpecs.withName;
+
 @Repository
 public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired @Lazy
+    private RestaurantRepository restaurantRepository;
+
     @Override
     public List<Restaurant> find(String name, BigDecimal initialFee, BigDecimal finalFee) {
 
@@ -47,5 +57,10 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
         TypedQuery<Restaurant> query = entityManager.createQuery(criteria);
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<Restaurant> findFreeDelivery(String name) {
+        return restaurantRepository.findAll(withFreeDelivery().and(withName(name)));
     }
 }

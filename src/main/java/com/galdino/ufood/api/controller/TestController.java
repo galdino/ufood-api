@@ -13,9 +13,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.galdino.ufood.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
-import static com.galdino.ufood.infrastructure.repository.spec.RestaurantSpecs.withName;
-
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -71,6 +68,6 @@ public class TestController {
     @GetMapping("/restaurants/free-delivery")
     public List<Restaurant> findFreeDelivery(String name) {
 
-        return restaurantRepository.findAll(withFreeDelivery().and(withName(name)));
+        return restaurantRepository.findFreeDelivery(name);
     }
 }
