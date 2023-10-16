@@ -22,6 +22,7 @@ public class Restaurant {
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
 
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
