@@ -33,8 +33,8 @@ public class User {
     private LocalDateTime registerDate;
 
     @ManyToMany
-    @JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"),
-               inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Group> groups = new ArrayList<>();
+    @JoinTable(name = "user_ugroup", joinColumns = @JoinColumn(name = "user_id"),
+               inverseJoinColumns = @JoinColumn(name = "ugroup_id"))
+    private List<UGroup> uGroups = new ArrayList<>();
 
 }

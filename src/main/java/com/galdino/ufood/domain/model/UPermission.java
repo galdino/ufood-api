@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Permission {
+public class UPermission {
 
 	@EqualsAndHashCode.Include
 	@Id
