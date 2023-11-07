@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface RestaurantRepository extends CustomJpaRepository<Restaurant, Long>,
                                               RestaurantRepositoryQueries,
                                               JpaSpecificationExecutor<Restaurant> {
-    @Query("select distinct r from Restaurant r join fetch r.kitchen join fetch r.paymentMethods")
+    @Query("from Restaurant r join fetch r.kitchen")
     List<Restaurant> findAll();
     List<Restaurant> queryByDeliveryFeeBetween(BigDecimal initialFee, BigDecimal finalFee);
     List<Restaurant> findByNameContainingAndKitchenId(String name, Long kitchenId);
