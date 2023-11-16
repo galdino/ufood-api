@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/kitchens")
@@ -37,24 +36,8 @@ public class KitchenController {
 
 //    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Kitchen> findById(@PathVariable Long id) {
-        Optional<Kitchen> kitchen = kitchenRepository.findById(id);
-
-//        return ResponseEntity.status(HttpStatus.OK).body(kitchen);
-//        return ResponseEntity.ok(kitchen);
-
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add(HttpHeaders.LOCATION, "http://localhost:8080/kitchens/");
-//
-//        return ResponseEntity.status(HttpStatus.FOUND)
-//                             .headers(httpHeaders)
-//                             .build();
-
-        if (kitchen.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(kitchen.get());
+    public Kitchen findById(@PathVariable Long id) {
+        return kitchenRegisterService.findOrThrow(id);
     }
 
     @PostMapping
@@ -65,33 +48,13 @@ public class KitchenController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-        Optional<Kitchen> kitchenAux = kitchenRepository.findById(id);
+    public Kitchen update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
+        Kitchen kitchenAux = kitchenRegisterService.findOrThrow(id);
 
-        if (kitchenAux.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        BeanUtils.copyProperties(kitchen, kitchenAux, "id");
 
-        BeanUtils.copyProperties(kitchen, kitchenAux.get(), "id");
-
-        Kitchen added = kitchenRegisterService.add(kitchenAux.get());
-
-        return ResponseEntity.status(HttpStatus.OK).body(added);
-
+        return kitchenRegisterService.add(kitchenAux);
     }
-
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Kitchen> delete(@PathVariable Long id) {
-//        try {
-//            kitchenRegisterService.remove(id);
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//
-//        } catch (UEntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        } catch (EntityInUseException e) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//        }
-//    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
