@@ -1,8 +1,6 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.model.KitchensXmlWrapper;
-import com.galdino.ufood.domain.exception.EntityInUseException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.service.KitchenRegisterService;
@@ -11,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,12 +96,6 @@ public class KitchenController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        try {
-            kitchenRegisterService.remove(id);
-        } catch (UEntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityInUseException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+        kitchenRegisterService.remove(id);
     }
 }
