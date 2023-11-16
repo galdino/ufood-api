@@ -3,9 +3,9 @@ package com.galdino.ufood.domain.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-public class EntityInUseException extends RuntimeException {
-    public EntityInUseException(String message) {
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class UEntityNotFoundException extends RuntimeException {
+    public UEntityNotFoundException(String message) {
         super(message);
     }
 }
