@@ -1,17 +1,13 @@
 package com.galdino.ufood.api.controller;
 
-import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.model.State;
 import com.galdino.ufood.domain.repository.StateRepository;
 import com.galdino.ufood.domain.service.StateRegisterService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/states")
@@ -31,48 +27,28 @@ public class StateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<State> findById(@PathVariable Long id) {
-        Optional<State> state = stateRepository.findById(id);
-
-        if (state.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(state.get());
+    public State findById(@PathVariable Long id) {
+        return stateRegisterService.findOrThrow(id);
     }
 
     @PostMapping
-    public ResponseEntity<State> add(@RequestBody State state) {
-        State stateAux = stateRegisterService.add(state);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(stateAux);
+    @ResponseStatus(HttpStatus.CREATED)
+    public State add(@RequestBody State state) {
+        return stateRegisterService.add(state);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state) {
-        Optional<State> stateAux = stateRepository.findById(id);
+    public State update(@PathVariable Long id, @RequestBody State state) {
+        State stateAux = stateRegisterService.findOrThrow(id);
 
-        if (stateAux.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        BeanUtils.copyProperties(state, stateAux, "id");
 
-        BeanUtils.copyProperties(state, stateAux.get(), "id");
-        State added = stateRegisterService.add(stateAux.get());
-
-        return ResponseEntity.status(HttpStatus.OK).body(added);
-
+        return stateRegisterService.add(stateAux);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            stateRegisterService.remove(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (EntityInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        stateRegisterService.remove(id);
     }
 }
