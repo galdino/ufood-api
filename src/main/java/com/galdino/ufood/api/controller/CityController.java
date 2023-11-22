@@ -1,5 +1,7 @@
 package com.galdino.ufood.api.controller;
 
+import com.galdino.ufood.domain.exception.BusinessException;
+import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
@@ -34,7 +36,11 @@ public class CityController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public City add(@RequestBody City city) {
-        return cityRegisterService.add(city);
+        try {
+            return cityRegisterService.add(city);
+        } catch (UEntityNotFoundException e) {
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -43,7 +49,11 @@ public class CityController {
 
         BeanUtils.copyProperties(city, cityAux, "id");
 
-        return cityRegisterService.add(cityAux);
+        try {
+            return cityRegisterService.add(cityAux);
+        } catch (UEntityNotFoundException e) {
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

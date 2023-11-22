@@ -4,7 +4,6 @@ import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
-import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,17 +16,16 @@ public class RestaurantRegisterService {
     public static final String RESTAURANT_IN_USE = "Restaurant with id %d cannot be removed, it is in use.";
 
     private RestaurantRepository restaurantRepository;
-    private KitchenRepository kitchenRepository;
+    private KitchenRegisterService kitchenRegisterService;
 
-    public RestaurantRegisterService(RestaurantRepository restaurantRepository, KitchenRepository kitchenRepository) {
+    public RestaurantRegisterService(RestaurantRepository restaurantRepository, KitchenRegisterService kitchenRegisterService) {
         this.restaurantRepository = restaurantRepository;
-        this.kitchenRepository = kitchenRepository;
+        this.kitchenRegisterService = kitchenRegisterService;
     }
 
     public Restaurant add(Restaurant restaurant) {
         Long kitchenId = restaurant.getKitchen().getId();
-        Kitchen kitchen = kitchenRepository.findById(kitchenId)
-                                           .orElseThrow(() -> new UEntityNotFoundException(String.format(KitchenRegisterService.UNABLE_TO_FIND_KITCHEN, kitchenId)));
+        Kitchen kitchen = kitchenRegisterService.findOrThrow(kitchenId);
 
         restaurant.setKitchen(kitchen);
 

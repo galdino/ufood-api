@@ -5,7 +5,6 @@ import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.model.State;
 import com.galdino.ufood.domain.repository.CityRepository;
-import com.galdino.ufood.domain.repository.StateRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -15,17 +14,16 @@ public class CityRegisterService {
 
     public static final String UNABLE_TO_FIND_CITY = "Unable to find city with id %d";
     private CityRepository cityRepository;
-    private StateRepository stateRepository;
+    private StateRegisterService stateRegisterService;
 
-    public CityRegisterService(CityRepository cityRepository, StateRepository stateRepository) {
+    public CityRegisterService(CityRepository cityRepository, StateRegisterService stateRegisterService) {
         this.cityRepository = cityRepository;
-        this.stateRepository = stateRepository;
+        this.stateRegisterService = stateRegisterService;
     }
 
     public City add(City city) {
         Long stateId = city.getState().getId();
-        State state = stateRepository.findById(stateId)
-                                     .orElseThrow(() -> new UEntityNotFoundException(String.format(StateRegisterService.UNABLE_TO_FIND_STATE, stateId)));
+        State state = stateRegisterService.findOrThrow(stateId);
 
         city.setState(state);
         return cityRepository.save(city);
