@@ -1,7 +1,7 @@
 package com.galdino.ufood.domain.service;
 
 import com.galdino.ufood.domain.exception.EntityInUseException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
+import com.galdino.ufood.domain.exception.StateNotFoundException;
 import com.galdino.ufood.domain.model.State;
 import com.galdino.ufood.domain.repository.StateRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,13 +25,13 @@ public class StateRegisterService {
         try {
             stateRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new UEntityNotFoundException(String.format(UNABLE_TO_FIND_STATE, id));
+            throw new StateNotFoundException(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(String.format("State with id %d cannot be removed, it is in use." , id));
         }
     }
 
     public State findOrThrow(Long id) {
-        return stateRepository.findById(id).orElseThrow(() -> new UEntityNotFoundException(String.format(UNABLE_TO_FIND_STATE, id)));
+        return stateRepository.findById(id).orElseThrow(() -> new StateNotFoundException(id));
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class UEntityNotFoundException extends RuntimeException {
+public class UEntityNotFoundException extends BusinessException {
     public UEntityNotFoundException(String message) {
         super(message);
     }

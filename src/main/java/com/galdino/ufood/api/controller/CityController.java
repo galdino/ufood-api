@@ -1,7 +1,7 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.domain.exception.BusinessException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
+import com.galdino.ufood.domain.exception.StateNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
@@ -38,21 +38,20 @@ public class CityController {
     public City add(@RequestBody City city) {
         try {
             return cityRegisterService.add(city);
-        } catch (UEntityNotFoundException e) {
-            throw new BusinessException(e.getMessage());
+        } catch (StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{id}")
     public City update(@PathVariable Long id, @RequestBody City city) {
-        City cityAux = cityRegisterService.findOrThrow(id);
-
-        BeanUtils.copyProperties(city, cityAux, "id");
-
         try {
+            City cityAux = cityRegisterService.findOrThrow(id);
+
+            BeanUtils.copyProperties(city, cityAux, "id");
             return cityRegisterService.add(cityAux);
-        } catch (UEntityNotFoundException e) {
-            throw new BusinessException(e.getMessage());
+        } catch (StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
