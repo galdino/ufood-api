@@ -2,7 +2,7 @@ package com.galdino.ufood.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galdino.ufood.domain.exception.BusinessException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
+import com.galdino.ufood.domain.exception.KitchenNotFoundException;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
@@ -42,8 +42,8 @@ public class RestaurantController {
     public Restaurant add(@RequestBody Restaurant restaurant) {
         try {
             return restaurantRegisterService.add(restaurant);
-        } catch (UEntityNotFoundException e) {
-            throw new BusinessException(e.getMessage());
+        } catch (KitchenNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
@@ -55,8 +55,8 @@ public class RestaurantController {
 
         try {
             return restaurantRegisterService.add(restaurantAux);
-        } catch (UEntityNotFoundException e) {
-            throw new BusinessException(e.getMessage());
+        } catch (KitchenNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 

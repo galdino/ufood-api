@@ -1,7 +1,7 @@
 package com.galdino.ufood.domain.service;
 
 import com.galdino.ufood.domain.exception.EntityInUseException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
+import com.galdino.ufood.domain.exception.RestaurantNotFoundException;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RestaurantRegisterService {
 
-    public static final String UNABLE_TO_FIND_RESTAURANT = "Unable to find restaurant with id %d";
     public static final String RESTAURANT_IN_USE = "Restaurant with id %d cannot be removed, it is in use.";
 
     private RestaurantRepository restaurantRepository;
@@ -36,13 +35,13 @@ public class RestaurantRegisterService {
         try {
             restaurantRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new UEntityNotFoundException(String.format(UNABLE_TO_FIND_RESTAURANT, id));
+            throw new RestaurantNotFoundException(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(String.format(RESTAURANT_IN_USE, id));
         }
     }
 
     public Restaurant findOrThrow(Long id) {
-        return restaurantRepository.findById(id).orElseThrow(() -> new UEntityNotFoundException(String.format(UNABLE_TO_FIND_RESTAURANT, id)));
+        return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 }

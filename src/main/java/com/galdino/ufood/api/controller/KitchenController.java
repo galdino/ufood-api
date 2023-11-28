@@ -7,7 +7,6 @@ import com.galdino.ufood.domain.service.KitchenRegisterService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,10 +40,9 @@ public class KitchenController {
     }
 
     @PostMapping
-    public ResponseEntity<Kitchen> add(@RequestBody Kitchen kitchen) {
-        Kitchen kitchenAux = kitchenRegisterService.add(kitchen);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(kitchenAux);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Kitchen add(@RequestBody Kitchen kitchen) {
+        return kitchenRegisterService.add(kitchen);
     }
 
     @PutMapping("/{id}")

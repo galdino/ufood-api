@@ -1,7 +1,7 @@
 package com.galdino.ufood.domain.service;
 
+import com.galdino.ufood.domain.exception.CityNotFoundException;
 import com.galdino.ufood.domain.exception.EntityInUseException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.model.State;
 import com.galdino.ufood.domain.repository.CityRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CityRegisterService {
 
-    public static final String UNABLE_TO_FIND_CITY = "Unable to find city with id %d";
     private CityRepository cityRepository;
     private StateRegisterService stateRegisterService;
 
@@ -33,13 +32,13 @@ public class CityRegisterService {
         try {
             cityRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new UEntityNotFoundException(String.format(UNABLE_TO_FIND_CITY, id));
+            throw new CityNotFoundException(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(String.format("City with id %d cannot be removed, it is in use.", id));
         }
     }
 
     public City findOrThrow(Long id) {
-        return cityRepository.findById(id).orElseThrow(() -> new UEntityNotFoundException(String.format(UNABLE_TO_FIND_CITY, id)));
+        return cityRepository.findById(id).orElseThrow(() -> new CityNotFoundException(id));
     }
 }
