@@ -1,6 +1,7 @@
 package com.galdino.ufood.api.exceptionhandler;
 
 import com.galdino.ufood.domain.exception.BusinessException;
+import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,16 @@ public class ApiExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(EntityInUseException.class)
+    public ResponseEntity<?> handleEntityInUseException(EntityInUseException e) {
+        Error error = Error.builder()
+                           .dateTime(LocalDateTime.now())
+                           .message(e.getMessage())
+                           .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     @ExceptionHandler(BusinessException.class)
