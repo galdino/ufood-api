@@ -1,18 +1,14 @@
 package com.galdino.ufood.api.controller;
 
-import com.galdino.ufood.api.exceptionhandler.Error;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.StateNotFoundException;
-import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -64,26 +60,5 @@ public class CityController {
     public void remove(@PathVariable Long id) {
         cityRegisterService.remove(id);
     }
-
-    @ExceptionHandler(UEntityNotFoundException.class)
-    public ResponseEntity<?> handleUEntityNotFoundException(UEntityNotFoundException e) {
-        Error error = Error.builder()
-                           .dateTime(LocalDateTime.now())
-                           .message(e.getMessage())
-                           .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<?> handleBusinessException(BusinessException e) {
-        Error error = Error.builder()
-                           .dateTime(LocalDateTime.now())
-                           .message(e.getMessage())
-                           .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
 
 }
