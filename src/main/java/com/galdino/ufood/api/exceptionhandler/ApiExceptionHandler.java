@@ -11,15 +11,24 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UEntityNotFoundException.class)
     public ResponseEntity<?> handleUEntityNotFoundException(UEntityNotFoundException ex, WebRequest request) {
 
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        Problem problem = createProblemBuilder(status, ProblemType.ENTITY_NOT_FOUND, ex.getMessage()).build();
+
+//        Problem problem = Problem.builder()
+//                .status(status.value())
+//                .type("https://ufood.com/entity-not-found")
+//                .title("Entity not found")
+//                .detail(ex.getMessage())
+//                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntityInUseException.class)
@@ -37,13 +46,25 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        String msg = body instanceof String ? ((String) body) : status.getReasonPhrase();
+        if (body == null || body instanceof String) {
+            String msg = body instanceof String ? ((String) body) : status.getReasonPhrase();
 
-        body = Error.builder()
-                .dateTime(LocalDateTime.now())
-                .message(msg)
-                .build();
+            body = Problem.builder()
+                    .title(msg)
+                    .status(status.value())
+                    .build();
+        }
+
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail) {
+
+        return Problem.builder()
+                .status(status.value())
+                .type(problemType.getUri())
+                .title(problemType.getTitle())
+                .detail(detail);
     }
 }
