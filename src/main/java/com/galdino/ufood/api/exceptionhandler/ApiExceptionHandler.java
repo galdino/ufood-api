@@ -1,8 +1,10 @@
 package com.galdino.ufood.api.exceptionhandler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.stream.Collectors;
+
+import static com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -55,11 +61,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        String detail = "The request's body is invalid.";
+        Throwable rootCause = ExceptionUtils.getRootCause(ex);
 
+        if (rootCause instanceof InvalidFormatException) {
+            return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        }
+
+        String detail = "The request's body is invalid.";
         Problem problem = createProblemBuilder(status, ProblemType.NOT_UNDERSTANDABLE_MESSAGE, detail).build();
 
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        String path = ex.getPath().stream()
+                .map(Reference::getFieldName)
+                .collect(Collectors.joining("."));
+
+        String detail = String.format("The property '%s' has a invalid type. Expected type is %s.", path, ex.getTargetType().getSimpleName());
+
+        Problem problem = createProblemBuilder(status, ProblemType.NOT_UNDERSTANDABLE_MESSAGE, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
     @Override
