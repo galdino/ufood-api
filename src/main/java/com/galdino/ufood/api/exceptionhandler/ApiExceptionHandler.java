@@ -1,6 +1,8 @@
 package com.galdino.ufood.api.exceptionhandler;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
@@ -65,6 +67,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (rootCause instanceof InvalidFormatException) {
             return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        } else if (rootCause instanceof PropertyBindingException) {
+            return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
         }
 
         String detail = "The request's body is invalid.";
@@ -75,15 +79,31 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        String path = ex.getPath().stream()
-                .map(Reference::getFieldName)
-                .collect(Collectors.joining("."));
+        String path = getPath(ex);
 
         String detail = String.format("The property '%s' has a invalid type. Expected type is %s.", path, ex.getTargetType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, ProblemType.NOT_UNDERSTANDABLE_MESSAGE, detail).build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        String path = getPath(ex);
+        String detail = String.format("The property '%s' is invalid.", path);
+
+        Problem problem = createProblemBuilder(status, ProblemType.NOT_UNDERSTANDABLE_MESSAGE, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+
+    }
+
+    private static String getPath(JsonMappingException ex) {
+        String path = ex.getPath().stream()
+                .map(Reference::getFieldName)
+                .collect(Collectors.joining("."));
+        return path;
     }
 
     @Override
