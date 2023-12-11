@@ -7,6 +7,7 @@ import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.stream.Collectors;
@@ -81,7 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String path = getPath(ex);
 
-        String detail = String.format("The property '%s' has a invalid type. Expected type is %s.", path, ex.getTargetType().getSimpleName());
+        String detail = String.format("The property '%s' has an invalid type. Expected type is %s.", path, ex.getTargetType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, ProblemType.NOT_UNDERSTANDABLE_MESSAGE, detail).build();
 
@@ -107,6 +109,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        if (ex instanceof MethodArgumentTypeMismatchException) {
+            return handleMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException) ex, headers, status, request);
+        }
+
+        return super.handleTypeMismatch(ex, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String detail = String.format("The URL's parameter '%s' has the value '%s', it's invalid type. The correct type is %s", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+
+        Problem problem = createProblemBuilder(status, ProblemType.INVALID_PARAMETER, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         if (body == null) {
@@ -115,7 +135,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .status(status.value())
                     .build();
         }
-
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
