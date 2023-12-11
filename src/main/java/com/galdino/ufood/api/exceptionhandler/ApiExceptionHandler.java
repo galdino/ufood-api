@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
-        Problem problem = createProblemBuilder(status, ProblemType.ENTITY_NOT_FOUND, ex.getMessage()).build();
+        Problem problem = createProblemBuilder(status, ProblemType.RESOURCE_NOT_FOUND, ex.getMessage()).build();
 
 //        Problem problem = Problem.builder()
 //                .status(status.value())
@@ -119,9 +120,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String detail = String.format("The URL's parameter '%s' has the value '%s', it's invalid type. The correct type is %s", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+        String detail = String.format("The URL's parameter '%s' has the value '%s', it's invalid type. The correct type is %s.", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, ProblemType.INVALID_PARAMETER, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String detail = String.format("The resource '%s' does not exist.", ex.getRequestURL());
+
+        Problem problem = createProblemBuilder(status, ProblemType.RESOURCE_NOT_FOUND, detail).build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
