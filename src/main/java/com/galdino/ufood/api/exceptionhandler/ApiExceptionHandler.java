@@ -136,6 +136,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleUncaught(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ex.printStackTrace();
+
+        Problem problem = createProblemBuilder(status, ProblemType.SYSTEM_ERROR, "System error occurred. Try again. If no success, contact the system administrator.").build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 

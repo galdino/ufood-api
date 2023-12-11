@@ -9,7 +9,8 @@ public enum ProblemType {
     RESOURCE_NOT_FOUND("Resource not found", "/resource-not-found"),
     ENTITY_IN_USE("Entity in use", "/entity-in-use"),
     BUSINESS_ERROR("Business rule violation", "/business-error"),
-    INVALID_PARAMETER("Invalid Parameter", "/invalid-parameter");
+    INVALID_PARAMETER("Invalid Parameter", "/invalid-parameter"),
+    SYSTEM_ERROR("System error", "/system-error");
 
     private String title;
     private String uri;
