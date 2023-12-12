@@ -21,6 +21,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.JsonMappingException.Reference;
@@ -160,8 +161,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String detail = "One or more fields are invalid.";
 
+        List<Problem.Field> problemFields = ex.getBindingResult().getFieldErrors().stream()
+                                                                                  .map(fieldError -> Problem.Field.builder()
+                                                                                            .name(fieldError.getField())
+                                                                                            .userMessage(fieldError.getDefaultMessage())
+                                                                                            .build())
+                                                                                  .collect(Collectors.toList());
+
         Problem problem = createProblemBuilder(status, ProblemType.INVALID_FIELD, detail)
                           .userMessage(detail)
+                          .fields(problemFields)
                           .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
