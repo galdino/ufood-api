@@ -10,7 +10,8 @@ public enum ProblemType {
     ENTITY_IN_USE("Entity in use", "/entity-in-use"),
     BUSINESS_ERROR("Business rule violation", "/business-error"),
     INVALID_PARAMETER("Invalid Parameter", "/invalid-parameter"),
-    SYSTEM_ERROR("System error", "/system-error");
+    SYSTEM_ERROR("System error", "/system-error"),
+    INVALID_FIELD("Invalid field", "/invalid-field");
 
     private String title;
     private String uri;
