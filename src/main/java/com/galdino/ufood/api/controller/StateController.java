@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,12 +34,12 @@ public class StateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public State add(@RequestBody State state) {
+    public State add(@RequestBody @Valid State state) {
         return stateRegisterService.add(state);
     }
 
     @PutMapping("/{id}")
-    public State update(@PathVariable Long id, @RequestBody State state) {
+    public State update(@PathVariable Long id, @RequestBody @Valid State state) {
         State stateAux = stateRegisterService.findOrThrow(id);
 
         BeanUtils.copyProperties(state, stateAux, "id");
