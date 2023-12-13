@@ -2,5 +2,5 @@ package com.galdino.ufood;
 
 public interface Groups {
 
-    public interface RestaurantRegister {}
+    public interface KitchenId {}
 }

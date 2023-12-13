@@ -12,6 +12,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,19 +31,20 @@ public class Restaurant {
 
 //    @NotNull
 //    @NotEmpty
-    @NotBlank(groups = Groups.RestaurantRegister.class)
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
 //    @DecimalMin("0")
-    @PositiveOrZero(groups = Groups.RestaurantRegister.class)
+    @PositiveOrZero
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
 
 //    @JsonIgnore
 //    @JsonIgnoreProperties("hibernateLazyInitializer")
     @Valid
-    @NotNull(groups = Groups.RestaurantRegister.class)
+    @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
+    @NotNull
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
