@@ -1,6 +1,7 @@
 package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galdino.ufood.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,19 +29,19 @@ public class Restaurant {
 
 //    @NotNull
 //    @NotEmpty
-    @NotBlank
+    @NotBlank(groups = Groups.RestaurantRegister.class)
     @Column(nullable = false)
     private String name;
 
 //    @DecimalMin("0")
-    @PositiveOrZero
+    @PositiveOrZero(groups = Groups.RestaurantRegister.class)
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
 
 //    @JsonIgnore
 //    @JsonIgnoreProperties("hibernateLazyInitializer")
     @Valid
-    @NotNull
+    @NotNull(groups = Groups.RestaurantRegister.class)
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
