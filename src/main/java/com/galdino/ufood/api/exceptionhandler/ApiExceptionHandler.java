@@ -8,6 +8,8 @@ import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,12 @@ import static com.fasterxml.jackson.databind.JsonMappingException.Reference;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String SYSTEM_ERROR_MSG = "System error occurred. Try again. If no success, contact the system administrator.";
+
+    private MessageSource messageSource;
+
+    public ApiExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ExceptionHandler(UEntityNotFoundException.class)
     public ResponseEntity<?> handleUEntityNotFoundException(UEntityNotFoundException ex, WebRequest request) {
@@ -162,10 +170,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = "One or more fields are invalid.";
 
         List<Problem.Field> problemFields = ex.getBindingResult().getFieldErrors().stream()
-                                                                                  .map(fieldError -> Problem.Field.builder()
+                                                                                  .map(fieldError -> {
+                                                                                      String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                                                                                      return Problem.Field.builder()
                                                                                             .name(fieldError.getField())
-                                                                                            .userMessage(fieldError.getDefaultMessage())
-                                                                                            .build())
+                                                                                            .userMessage(message)
+                                                                                            .build();
+                                                                                      })
                                                                                   .collect(Collectors.toList());
 
         Problem problem = createProblemBuilder(status, ProblemType.INVALID_FIELD, detail)

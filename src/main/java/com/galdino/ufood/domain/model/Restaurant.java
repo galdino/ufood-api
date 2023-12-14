@@ -31,7 +31,7 @@ public class Restaurant {
 
 //    @NotNull
 //    @NotEmpty
-    @NotBlank(message = "must not be blank")
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
