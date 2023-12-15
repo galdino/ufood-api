@@ -1,4 +1,4 @@
-package com.galdino.ufood;
+package com.galdino.ufood.core.validation;
 
 public interface Groups {
 

@@ -2,7 +2,7 @@ package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.galdino.ufood.Groups;
+import com.galdino.ufood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

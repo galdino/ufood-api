@@ -1,7 +1,8 @@
 package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.galdino.ufood.Groups;
+import com.galdino.ufood.core.validation.DeliveryFee;
+import com.galdino.ufood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,7 +12,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
@@ -36,7 +36,8 @@ public class Restaurant {
     private String name;
 
 //    @DecimalMin("0")
-    @PositiveOrZero
+//    @PositiveOrZero
+    @DeliveryFee
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
 

@@ -1,6 +1,6 @@
 package com.galdino.ufood.domain.model;
 
-import com.galdino.ufood.Groups;
+import com.galdino.ufood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
