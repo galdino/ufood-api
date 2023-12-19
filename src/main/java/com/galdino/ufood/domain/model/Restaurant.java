@@ -1,8 +1,8 @@
 package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.galdino.ufood.core.validation.DeliveryFee;
 import com.galdino.ufood.core.validation.Groups;
+import com.galdino.ufood.core.validation.Multiple;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,7 +37,8 @@ public class Restaurant {
 
 //    @DecimalMin("0")
 //    @PositiveOrZero
-    @DeliveryFee
+//    @DeliveryFee
+    @Multiple(number = 5)
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
 
