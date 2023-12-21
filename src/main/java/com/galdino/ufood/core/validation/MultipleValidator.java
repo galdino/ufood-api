@@ -14,16 +14,16 @@ public class MultipleValidator implements ConstraintValidator<Multiple, Number> 
 
     @Override
     public boolean isValid(Number value, ConstraintValidatorContext context) {
-        boolean valid = true;
+        boolean isValid = true;
 
         if (value != null) {
             var valueDecimal = BigDecimal.valueOf(value.doubleValue());
             var multipleDecimal = BigDecimal.valueOf(this.multipleNumber);
             BigDecimal remainder = valueDecimal.remainder(multipleDecimal);
 
-            valid = BigDecimal.ZERO.compareTo(remainder) == 0;
+            isValid = BigDecimal.ZERO.compareTo(remainder) == 0;
         }
 
-        return valid;
+        return isValid;
     }
 }

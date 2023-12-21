@@ -3,6 +3,7 @@ package com.galdino.ufood.domain.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.galdino.ufood.core.validation.Groups;
 import com.galdino.ufood.core.validation.Multiple;
+import com.galdino.ufood.core.validation.ValueZeroAddDescription;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@ValueZeroAddDescription(fieldValue = "deliveryFee", fieldDescription = "name", mandatoryDescription = "Free Delivery")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
