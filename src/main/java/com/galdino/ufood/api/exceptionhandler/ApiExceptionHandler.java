@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -169,12 +170,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String detail = "One or more fields are invalid.";
 
-        List<Problem.Field> problemFields = ex.getBindingResult().getFieldErrors().stream()
-                                                                                  .map(fieldError -> {
-                                                                                      String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+        List<Problem.Object> problemObjects = ex.getBindingResult().getAllErrors().stream()
+                                                                                  .map(objectError -> {
+                                                                                      String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+                                                                                      String name = objectError.getObjectName();
 
-                                                                                      return Problem.Field.builder()
-                                                                                            .name(fieldError.getField())
+                                                                                      if (objectError instanceof FieldError) {
+                                                                                          name = ((FieldError) objectError).getField();
+                                                                                      }
+
+                                                                                      return Problem.Object.builder()
+                                                                                            .name(name)
                                                                                             .userMessage(message)
                                                                                             .build();
                                                                                       })
@@ -182,7 +188,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         Problem problem = createProblemBuilder(status, ProblemType.INVALID_FIELD, detail)
                           .userMessage(detail)
-                          .fields(problemFields)
+                          .objects(problemObjects)
                           .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
