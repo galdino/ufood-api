@@ -2,6 +2,7 @@ package com.galdino.ufood.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
 import com.galdino.ufood.domain.model.Restaurant;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +30,12 @@ public class RestaurantController {
 
     private RestaurantRepository restaurantRepository;
     private RestaurantRegisterService restaurantRegisterService;
+    private SmartValidator validator;
 
-    public RestaurantController(RestaurantRepository restaurantRepository, RestaurantRegisterService restaurantRegisterService) {
+    public RestaurantController(RestaurantRepository restaurantRepository, RestaurantRegisterService restaurantRegisterService, SmartValidator validator) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegisterService = restaurantRegisterService;
+        this.validator = validator;
     }
 
     @GetMapping
@@ -77,8 +82,18 @@ public class RestaurantController {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
 
         merge(fields, restaurantAux, request);
+        validate(restaurantAux, "restaurant");
 
         return update(id, restaurantAux);
+    }
+
+    private void validate(Restaurant restaurantAux, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurantAux, objectName);
+        validator.validate(restaurantAux, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
     }
 
     private void merge(Map<String, Object> fields, Restaurant restaurantAux, HttpServletRequest request) {
