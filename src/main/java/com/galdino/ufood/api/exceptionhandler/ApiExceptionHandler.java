@@ -3,6 +3,7 @@ package com.galdino.ufood.api.exceptionhandler;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UEntityNotFoundException;
@@ -81,6 +82,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                           .build();
 
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(ValidationException ex, WebRequest request) throws MethodArgumentNotValidException {
+        return handleMethodArgumentNotValid(new MethodArgumentNotValidException(null, ex.getBindingResult()), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
