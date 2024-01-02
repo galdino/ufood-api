@@ -1,5 +1,7 @@
 package com.galdino.ufood;
 
+import com.galdino.ufood.domain.exception.EntityInUseException;
+import com.galdino.ufood.domain.exception.KitchenNotFoundException;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.service.KitchenRegisterService;
 import org.junit.Test;
@@ -35,6 +37,22 @@ public class KitchenRegisterIntegrationTests {
         newKitchen.setName(null);
 
         newKitchen = kitchenRegisterService.add(newKitchen);
+
+    }
+
+    @Test(expected = EntityInUseException.class)
+    public void shouldFail_WhenRemoveKitchenInUse() {
+        Long id = 1L;
+
+        kitchenRegisterService.remove(id);
+
+    }
+
+    @Test(expected = KitchenNotFoundException.class)
+    public void shouldFail_WhenRemoveKitchenNotFound() {
+        Long id = 9999L;
+
+        kitchenRegisterService.remove(id);
 
     }
 
