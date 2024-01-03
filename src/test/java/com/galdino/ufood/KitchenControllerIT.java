@@ -2,6 +2,7 @@ package com.galdino.ufood;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +31,22 @@ public class KitchenControllerIT {
                 .get()
             .then()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void shouldHave2Kitchens_WhenGetKitchens() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+            given()
+                .basePath("/kitchens")
+                .port(port)
+                .accept(ContentType.JSON)
+            .when()
+                .get()
+            .then()
+                .body("", Matchers.hasSize(2))
+                .body("name", Matchers.hasItems("Thai", "Indian"));
+
     }
 
 }
