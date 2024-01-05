@@ -48,4 +48,16 @@ public class KitchenControllerIT {
                 .body("name", Matchers.hasItems("Thai", "Indian"));
     }
 
+    @Test
+    public void shoulReturnStatus201_WhenRegisterKitchen() {
+            given()
+                .body("{ \"name\": \"Chinese\" }")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+            .when()
+                .post()
+            .then()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
 }
