@@ -1,8 +1,10 @@
 package com.galdino.ufood;
 
+import com.galdino.ufood.domain.model.Kitchen;
+import com.galdino.ufood.domain.repository.KitchenRepository;
+import com.galdino.ufood.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +27,10 @@ public class KitchenControllerIT {
     private int port;
 
     @Autowired
-    private Flyway flyway;
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private KitchenRepository kitchenRepository;
 
     @Before
     public void setUp() {
@@ -33,7 +38,8 @@ public class KitchenControllerIT {
         RestAssured.port = port;
         RestAssured.basePath = "/kitchens";
 
-        flyway.migrate();
+        databaseCleaner.clearTables();
+        prepareData();
     }
 
     @Test
@@ -67,6 +73,17 @@ public class KitchenControllerIT {
                 .post()
             .then()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private void prepareData() {
+        Kitchen kitchen1 = new Kitchen();
+        kitchen1.setName("Thai");
+
+        Kitchen kitchen2 = new Kitchen();
+        kitchen2.setName("Indian");
+
+        kitchenRepository.save(kitchen1);
+        kitchenRepository.save(kitchen2);
     }
 
 }
