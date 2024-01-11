@@ -75,6 +75,29 @@ public class KitchenControllerIT {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @Test
+    public void shouldReturnKitchenAndStatus200_WhenGetWithKitchenId() {
+        given()
+            .pathParam("kitchenId", 1)
+            .accept(ContentType.JSON)
+        .when()
+            .get("/{kitchenId}")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("name", Matchers.equalTo("Thai"));
+    }
+
+    @Test
+    public void shouldReturnStatus404_WhenGetKitchenNotFound() {
+        given()
+                .pathParam("kitchenId", 100)
+                .accept(ContentType.JSON)
+                .when()
+                .get("/{kitchenId}")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
     private void prepareData() {
         Kitchen kitchen1 = new Kitchen();
         kitchen1.setName("Thai");
