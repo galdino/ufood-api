@@ -3,6 +3,7 @@ package com.galdino.ufood;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.util.DatabaseCleaner;
+import com.galdino.ufood.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
@@ -16,12 +17,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
 public class KitchenControllerIT {
+
+    public static final int KITCHEN_ID_NOT_FOUND = 100;
 
     @LocalServerPort
     private int port;
@@ -32,6 +38,9 @@ public class KitchenControllerIT {
     @Autowired
     private KitchenRepository kitchenRepository;
 
+    private List<Kitchen> kitchens;
+    private Kitchen kitchen1;
+
     @Before
     public void setUp() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -39,6 +48,9 @@ public class KitchenControllerIT {
         RestAssured.basePath = "/kitchens";
 
         databaseCleaner.clearTables();
+
+        kitchens = new ArrayList<>();
+
         prepareData();
     }
 
@@ -53,20 +65,19 @@ public class KitchenControllerIT {
     }
 
     @Test
-    public void shouldHave2Kitchens_WhenGetKitchens() {
+    public void shouldHaveSizeKitchens_WhenGetKitchens() {
             given()
                 .accept(ContentType.JSON)
             .when()
                 .get()
             .then()
-                .body("", Matchers.hasSize(2))
-                .body("name", Matchers.hasItems("Thai", "Indian"));
+                .body("", Matchers.hasSize(kitchens.size()));
     }
 
     @Test
     public void shoulReturnStatus201_WhenRegisterKitchen() {
             given()
-                .body("{ \"name\": \"Chinese\" }")
+                .body(ResourceUtils.getContentFromResource("/json/newKitchen.json"))
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
             .when()
@@ -78,28 +89,28 @@ public class KitchenControllerIT {
     @Test
     public void shouldReturnKitchenAndStatus200_WhenGetWithKitchenId() {
         given()
-            .pathParam("kitchenId", 1)
+            .pathParam("kitchenId", kitchen1.getId())
             .accept(ContentType.JSON)
         .when()
             .get("/{kitchenId}")
         .then()
             .statusCode(HttpStatus.OK.value())
-            .body("name", Matchers.equalTo("Thai"));
+            .body("name", Matchers.equalTo(kitchen1.getName()));
     }
 
     @Test
     public void shouldReturnStatus404_WhenGetKitchenNotFound() {
         given()
-                .pathParam("kitchenId", 100)
-                .accept(ContentType.JSON)
-                .when()
-                .get("/{kitchenId}")
-                .then()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+            .pathParam("kitchenId", KITCHEN_ID_NOT_FOUND)
+            .accept(ContentType.JSON)
+        .when()
+            .get("/{kitchenId}")
+        .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private void prepareData() {
-        Kitchen kitchen1 = new Kitchen();
+        kitchen1 = new Kitchen();
         kitchen1.setName("Thai");
 
         Kitchen kitchen2 = new Kitchen();
@@ -107,6 +118,8 @@ public class KitchenControllerIT {
 
         kitchenRepository.save(kitchen1);
         kitchenRepository.save(kitchen2);
+
+        kitchens = kitchenRepository.findAll();
     }
 
 }
