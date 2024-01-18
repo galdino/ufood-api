@@ -27,7 +27,7 @@ import static io.restassured.RestAssured.given;
 @TestPropertySource("/application-test.properties")
 public class KitchenControllerIT {
 
-    public static final int KITCHEN_ID_NOT_FOUND = 100;
+    public static final long KITCHEN_ID_NOT_FOUND = 100;
 
     @LocalServerPort
     private int port;
@@ -75,7 +75,7 @@ public class KitchenControllerIT {
     }
 
     @Test
-    public void shoulReturnStatus201_WhenRegisterKitchen() {
+    public void shouldReturnStatus201_WhenRegisterKitchen() {
             given()
                 .body(ResourceUtils.getContentFromResource("/json/newKitchen.json"))
                 .contentType(ContentType.JSON)
