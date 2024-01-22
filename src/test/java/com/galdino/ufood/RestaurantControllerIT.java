@@ -1,5 +1,6 @@
 package com.galdino.ufood;
 
+import com.galdino.ufood.api.exceptionhandler.ProblemType;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.KitchenRepository;
@@ -29,6 +30,8 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
 public class RestaurantControllerIT {
+
+    private static final long RESTAURANT_ID_NOT_FOUND = 9999;
 
     @LocalServerPort
     private int port;
@@ -100,6 +103,56 @@ public class RestaurantControllerIT {
         .then()
             .statusCode(HttpStatus.OK.value())
             .body("name", Matchers.equalTo(restaurant1.getName()));
+    }
+
+    @Test
+    public void shouldReturnStatus404_WhenGetRestaurantNotFound() {
+        given()
+            .pathParam("id", RESTAURANT_ID_NOT_FOUND)
+            .contentType(ContentType.JSON)
+        .when()
+            .get("/{id}")
+        .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    public void shouldReturnStatus400_WhenRegisterRestaurantWithoutDeliveryFee() {
+        given()
+            .body(ResourceUtils.getContentFromResource("/json/newRestaurantWithoutDeliveryFee.json"))
+            .accept(ContentType.JSON)
+            .contentType(ContentType.JSON)
+        .when()
+            .post()
+        .then()
+            .body("title", Matchers.equalTo(ProblemType.INVALID_FIELD.getTitle()))
+            .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void shouldReturn400_WhenRegisterRestaurantWithoutKitchen() {
+        given()
+            .body(ResourceUtils.getContentFromResource("/json/newRestaurantWithoutKitchen.json"))
+            .accept(ContentType.JSON)
+            .contentType(ContentType.JSON)
+        .when()
+            .post()
+        .then()
+            .body("title", Matchers.equalTo(ProblemType.INVALID_FIELD.getTitle()))
+            .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void shouldReturn400_WhenRegisterRestaurantWithKitchenNotFound() {
+        given()
+            .body(ResourceUtils.getContentFromResource("/json/newRestaurantWithKitchenNotFound.json"))
+            .accept(ContentType.JSON)
+            .contentType(ContentType.JSON)
+        .when()
+            .post()
+        .then()
+            .body("title", Matchers.equalTo(ProblemType.BUSINESS_ERROR.getTitle()))
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     private void prepareData() {

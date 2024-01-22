@@ -1,0 +1,7 @@
+{
+  "name": "Tuk tuk food",
+  "deliveryFee": 5,
+  "kitchen": {
+    "id": 100
+  }
+}

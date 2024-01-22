@@ -40,6 +40,7 @@ public class Restaurant {
 //    @DecimalMin("0")
 //    @PositiveOrZero
 //    @DeliveryFee
+    @NotNull
     @Multiple(number = 5)
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
