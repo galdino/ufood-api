@@ -8,6 +8,7 @@ import com.galdino.ufood.domain.repository.RestaurantRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RestaurantRegisterService {
@@ -22,6 +23,7 @@ public class RestaurantRegisterService {
         this.kitchenRegisterService = kitchenRegisterService;
     }
 
+    @Transactional
     public Restaurant add(Restaurant restaurant) {
         Long kitchenId = restaurant.getKitchen().getId();
         Kitchen kitchen = kitchenRegisterService.findOrThrow(kitchenId);
@@ -31,6 +33,7 @@ public class RestaurantRegisterService {
         return restaurantRepository.save(restaurant);
     }
 
+    @Transactional
     public void remove(Long id) {
         try {
             restaurantRepository.deleteById(id);

@@ -8,6 +8,7 @@ import com.galdino.ufood.domain.repository.CityRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CityRegisterService {
@@ -20,6 +21,7 @@ public class CityRegisterService {
         this.stateRegisterService = stateRegisterService;
     }
 
+    @Transactional
     public City add(City city) {
         Long stateId = city.getState().getId();
         State state = stateRegisterService.findOrThrow(stateId);
@@ -28,6 +30,7 @@ public class CityRegisterService {
         return cityRepository.save(city);
     }
 
+    @Transactional
     public void remove(Long id) {
         try {
             cityRepository.deleteById(id);

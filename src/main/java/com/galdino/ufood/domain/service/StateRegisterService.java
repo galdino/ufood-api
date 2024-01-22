@@ -7,6 +7,7 @@ import com.galdino.ufood.domain.repository.StateRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StateRegisterService {
@@ -17,10 +18,12 @@ public class StateRegisterService {
         this.stateRepository = stateRepository;
     }
 
+    @Transactional
     public State add(State state) {
         return stateRepository.save(state);
     }
 
+    @Transactional
     public void remove(Long id) {
         try {
             stateRepository.deleteById(id);
