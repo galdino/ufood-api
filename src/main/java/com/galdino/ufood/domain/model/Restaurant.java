@@ -1,7 +1,5 @@
 package com.galdino.ufood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.galdino.ufood.core.validation.Groups;
 import com.galdino.ufood.core.validation.Multiple;
 import com.galdino.ufood.core.validation.ValueZeroAddDescription;
@@ -48,7 +46,6 @@ public class Restaurant {
 
 //    @JsonIgnore
 //    @JsonIgnoreProperties("hibernateLazyInitializer")
-    @JsonIgnoreProperties(value = "name", allowGetters = true)
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
     @NotNull
@@ -56,27 +53,22 @@ public class Restaurant {
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
 
-    @JsonIgnore
     @Embedded
     private Address address;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime registerDate;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime updateDate;
 
-    @JsonIgnore
     @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant_payment_method", joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
 
