@@ -1,6 +1,7 @@
 package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.galdino.ufood.core.validation.Groups;
 import com.galdino.ufood.core.validation.Multiple;
 import com.galdino.ufood.core.validation.ValueZeroAddDescription;
@@ -47,6 +48,7 @@ public class Restaurant {
 
 //    @JsonIgnore
 //    @JsonIgnoreProperties("hibernateLazyInitializer")
+    @JsonIgnoreProperties(value = "name", allowGetters = true)
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
     @NotNull
