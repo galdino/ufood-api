@@ -1,6 +1,5 @@
 package com.galdino.ufood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.galdino.ufood.core.validation.Groups;
 import lombok.Data;
@@ -29,7 +28,6 @@ public class Kitchen {
     @Column(nullable = false)
     private String name;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "kitchen")
     private List<Restaurant> restaurants = new ArrayList<>();
 
