@@ -7,7 +7,7 @@ import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.PaymentMethod;
 import com.galdino.ufood.domain.model.Product;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +19,11 @@ public class RestaurantMixin {
     @JsonIgnore
     private Address address;
 
-    @JsonIgnore
-    private LocalDateTime registerDate;
+//    @JsonIgnore
+    private OffsetDateTime registerDate;
 
 //    @JsonIgnore
-    private LocalDateTime updateDate;
+    private OffsetDateTime updateDate;
 
     @JsonIgnore
     private List<PaymentMethod> paymentMethods = new ArrayList<>();

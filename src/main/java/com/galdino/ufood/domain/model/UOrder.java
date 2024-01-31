@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +33,16 @@ public class UOrder {
     @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
-    private LocalDateTime registerDate;
+    private OffsetDateTime registerDate;
 
     @Column(columnDefinition = "datetime")
-    private LocalDateTime confirmedDate;
+    private OffsetDateTime confirmedDate;
 
     @Column(columnDefinition = "datetime")
-    private LocalDateTime canceledDate;
+    private OffsetDateTime canceledDate;
 
     @Column(columnDefinition = "datetime")
-    private LocalDateTime deliveredDate;
+    private OffsetDateTime deliveredDate;
 
     @Embedded
     private Address deliveryAddress;
