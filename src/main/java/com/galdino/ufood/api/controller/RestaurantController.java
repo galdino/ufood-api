@@ -2,6 +2,8 @@ package com.galdino.ufood.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galdino.ufood.api.model.KitchenModel;
+import com.galdino.ufood.api.model.RestaurantModel;
 import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/restaurants")
@@ -39,33 +42,35 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<Restaurant> list() {
-        return restaurantRepository.findAll();
+    public List<RestaurantModel> list() {
+        return toCollectionModel(restaurantRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Restaurant findById(@PathVariable Long id) {
-        return restaurantRegisterService.findOrThrow(id);
+    public RestaurantModel findById(@PathVariable Long id) {
+        Restaurant restaurant = restaurantRegisterService.findOrThrow(id);
+
+        return toModel(restaurant);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurant add(@RequestBody @Valid Restaurant restaurant) {
+    public RestaurantModel add(@RequestBody @Valid Restaurant restaurant) {
         try {
-            return restaurantRegisterService.add(restaurant);
+            return toModel(restaurantRegisterService.add(restaurant));
         } catch (KitchenNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{id}")
-    public Restaurant update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
+    public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
 
         BeanUtils.copyProperties(restaurant, restaurantAux, "id", "paymentMethods", "address", "registerDate", "products");
 
         try {
-            return restaurantRegisterService.add(restaurantAux);
+            return toModel(restaurantRegisterService.add(restaurantAux));
         } catch (KitchenNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -78,7 +83,7 @@ public class RestaurantController {
     }
 
     @PatchMapping("/{id}")
-    public Restaurant partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
+    public RestaurantModel partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
 
         merge(fields, restaurantAux, request);
@@ -118,5 +123,25 @@ public class RestaurantController {
             Throwable rootCause = ExceptionUtils.getRootCause(e);
             throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
         }
+    }
+
+    private static RestaurantModel toModel(Restaurant restaurant) {
+        KitchenModel kitchenModel = new KitchenModel();
+        kitchenModel.setId(restaurant.getKitchen().getId());
+        kitchenModel.setName(restaurant.getKitchen().getName());
+
+        RestaurantModel restaurantModel = new RestaurantModel();
+        restaurantModel.setId(restaurant.getId());
+        restaurantModel.setName(restaurant.getName());
+        restaurantModel.setDeliveryFee(restaurant.getDeliveryFee());
+        restaurantModel.setKitchen(kitchenModel);
+
+        return restaurantModel;
+    }
+
+    private List<RestaurantModel> toCollectionModel(List<Restaurant> restaurants) {
+        return restaurants.stream()
+                          .map(RestaurantController::toModel)
+                          .collect(Collectors.toList());
     }
 }
