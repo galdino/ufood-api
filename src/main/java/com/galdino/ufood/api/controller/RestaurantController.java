@@ -2,6 +2,7 @@ package com.galdino.ufood.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galdino.ufood.api.model.KitchenIdInput;
 import com.galdino.ufood.api.model.KitchenModel;
 import com.galdino.ufood.api.model.RestaurantInput;
 import com.galdino.ufood.api.model.RestaurantModel;
@@ -91,7 +92,16 @@ public class RestaurantController {
         merge(fields, restaurantAux, request);
         validate(restaurantAux, "restaurant");
 
-        return update(id, restaurantAux);
+        RestaurantInput restaurantInput = new RestaurantInput();
+        restaurantInput.setName(restaurantAux.getName());
+        restaurantInput.setDeliveryFee(restaurantAux.getDeliveryFee());
+
+        KitchenIdInput kitchenIdInput = new KitchenIdInput();
+        kitchenIdInput.setId(restaurantAux.getKitchen().getId());
+
+        restaurantInput.setKitchen(kitchenIdInput);
+
+        return update(id, restaurantInput);
     }
 
     private void validate(Restaurant restaurantAux, String objectName) {
