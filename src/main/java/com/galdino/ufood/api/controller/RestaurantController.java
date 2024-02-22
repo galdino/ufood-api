@@ -3,10 +3,12 @@ package com.galdino.ufood.api.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galdino.ufood.api.model.KitchenModel;
+import com.galdino.ufood.api.model.RestaurantInput;
 import com.galdino.ufood.api.model.RestaurantModel;
 import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
+import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
@@ -55,19 +57,19 @@ public class RestaurantController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestaurantModel add(@RequestBody @Valid Restaurant restaurant) {
+    public RestaurantModel add(@RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-            return toModel(restaurantRegisterService.add(restaurant));
+            return toModel(restaurantRegisterService.add(toDomainObject(restaurantInput)));
         } catch (KitchenNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{id}")
-    public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
+    public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
 
-        BeanUtils.copyProperties(restaurant, restaurantAux, "id", "paymentMethods", "address", "registerDate", "products");
+        BeanUtils.copyProperties(toDomainObject(restaurantInput), restaurantAux, "id", "paymentMethods", "address", "registerDate", "products");
 
         try {
             return toModel(restaurantRegisterService.add(restaurantAux));
@@ -143,5 +145,18 @@ public class RestaurantController {
         return restaurants.stream()
                           .map(RestaurantController::toModel)
                           .collect(Collectors.toList());
+    }
+
+    private Restaurant toDomainObject(RestaurantInput restaurantInput) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantInput.getName());
+        restaurant.setDeliveryFee(restaurantInput.getDeliveryFee());
+
+        Kitchen kitchen = new Kitchen();
+        kitchen.setId(restaurantInput.getKitchen().getId());
+
+        restaurant.setKitchen(kitchen);
+
+        return restaurant;
     }
 }
