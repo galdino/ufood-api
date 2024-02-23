@@ -2,6 +2,7 @@ package com.galdino.ufood.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galdino.ufood.api.assembler.RestaurantInputDiassembler;
 import com.galdino.ufood.api.assembler.RestaurantModelAssembler;
 import com.galdino.ufood.api.model.KitchenIdInput;
 import com.galdino.ufood.api.model.RestaurantInput;
@@ -9,7 +10,6 @@ import com.galdino.ufood.api.model.RestaurantModel;
 import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
-import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
@@ -37,13 +37,15 @@ public class RestaurantController {
     private RestaurantRegisterService restaurantRegisterService;
     private SmartValidator validator;
     private RestaurantModelAssembler restaurantModelAssembler;
+    private RestaurantInputDiassembler restaurantInputDiassembler;
 
     public RestaurantController(RestaurantRepository restaurantRepository, RestaurantRegisterService restaurantRegisterService, SmartValidator validator,
-                                RestaurantModelAssembler restaurantModelAssembler) {
+                                RestaurantModelAssembler restaurantModelAssembler, RestaurantInputDiassembler restaurantInputDiassembler) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegisterService = restaurantRegisterService;
         this.validator = validator;
         this.restaurantModelAssembler = restaurantModelAssembler;
+        this.restaurantInputDiassembler = restaurantInputDiassembler;
     }
 
     @GetMapping
@@ -62,7 +64,7 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantModel add(@RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-            return restaurantModelAssembler.toModel(restaurantRegisterService.add(toDomainObject(restaurantInput)));
+            return restaurantModelAssembler.toModel(restaurantRegisterService.add(restaurantInputDiassembler.toDomainObject(restaurantInput)));
         } catch (KitchenNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -72,7 +74,7 @@ public class RestaurantController {
     public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
 
-        BeanUtils.copyProperties(toDomainObject(restaurantInput), restaurantAux, "id", "paymentMethods", "address", "registerDate", "products");
+        BeanUtils.copyProperties(restaurantInputDiassembler.toDomainObject(restaurantInput), restaurantAux, "id", "paymentMethods", "address", "registerDate", "products");
 
         try {
             return restaurantModelAssembler.toModel(restaurantRegisterService.add(restaurantAux));
@@ -139,16 +141,4 @@ public class RestaurantController {
         }
     }
 
-    private Restaurant toDomainObject(RestaurantInput restaurantInput) {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(restaurantInput.getName());
-        restaurant.setDeliveryFee(restaurantInput.getDeliveryFee());
-
-        Kitchen kitchen = new Kitchen();
-        kitchen.setId(restaurantInput.getKitchen().getId());
-
-        restaurant.setKitchen(kitchen);
-
-        return restaurant;
-    }
 }
