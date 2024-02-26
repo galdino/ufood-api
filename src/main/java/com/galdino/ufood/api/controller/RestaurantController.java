@@ -14,7 +14,6 @@ import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -74,7 +73,11 @@ public class RestaurantController {
     public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
 
-        BeanUtils.copyProperties(restaurantInputDiassembler.toDomainObject(restaurantInput), restaurantAux, "id", "paymentMethods", "address", "registerDate", "products");
+//        BeanUtils.copyProperties(restaurantInputDiassembler.toDomainObject(restaurantInput), restaurantAux,
+//                                                            "id", "paymentMethods", "address",
+//                                                                            "registerDate", "products");
+
+        restaurantInputDiassembler.copyToDomainObject(restaurantInput, restaurantAux);
 
         try {
             return restaurantModelAssembler.toModel(restaurantRegisterService.add(restaurantAux));
