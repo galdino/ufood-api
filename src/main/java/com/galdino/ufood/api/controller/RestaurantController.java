@@ -2,6 +2,7 @@ package com.galdino.ufood.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.assembler.RestaurantInputDiassembler;
 import com.galdino.ufood.api.assembler.RestaurantModelAssembler;
 import com.galdino.ufood.api.model.KitchenIdInput;
@@ -35,35 +36,38 @@ public class RestaurantController {
     private RestaurantRepository restaurantRepository;
     private RestaurantRegisterService restaurantRegisterService;
     private SmartValidator validator;
-    private RestaurantModelAssembler restaurantModelAssembler;
-    private RestaurantInputDiassembler restaurantInputDiassembler;
+    private GenericAssembler genericAssembler;
 
     public RestaurantController(RestaurantRepository restaurantRepository, RestaurantRegisterService restaurantRegisterService, SmartValidator validator,
-                                RestaurantModelAssembler restaurantModelAssembler, RestaurantInputDiassembler restaurantInputDiassembler) {
+                                RestaurantModelAssembler restaurantModelAssembler, RestaurantInputDiassembler restaurantInputDiassembler,
+                                GenericAssembler genericAssembler) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegisterService = restaurantRegisterService;
         this.validator = validator;
-        this.restaurantModelAssembler = restaurantModelAssembler;
-        this.restaurantInputDiassembler = restaurantInputDiassembler;
+        this.genericAssembler = genericAssembler;
     }
 
     @GetMapping
     public List<RestaurantModel> list() {
-        return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+        return genericAssembler.toCollection(restaurantRepository.findAll(), RestaurantModel.class);
     }
 
     @GetMapping("/{id}")
     public RestaurantModel findById(@PathVariable Long id) {
         Restaurant restaurant = restaurantRegisterService.findOrThrow(id);
 
-        return restaurantModelAssembler.toModel(restaurant);
+        return genericAssembler.toClass(restaurant, RestaurantModel.class);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantModel add(@RequestBody @Valid RestaurantInput restaurantInput) {
         try {
-            return restaurantModelAssembler.toModel(restaurantRegisterService.add(restaurantInputDiassembler.toDomainObject(restaurantInput)));
+
+            Restaurant restaurant = genericAssembler.toClass(restaurantInput, Restaurant.class);
+            restaurant = restaurantRegisterService.add(restaurant);
+
+            return genericAssembler.toClass(restaurant, RestaurantModel.class);
         } catch (KitchenNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -77,10 +81,12 @@ public class RestaurantController {
 //                                                            "id", "paymentMethods", "address",
 //                                                                            "registerDate", "products");
 
-        restaurantInputDiassembler.copyToDomainObject(restaurantInput, restaurantAux);
+        genericAssembler.copyToObject(restaurantInput, restaurantAux);
 
         try {
-            return restaurantModelAssembler.toModel(restaurantRegisterService.add(restaurantAux));
+            restaurantAux = restaurantRegisterService.add(restaurantAux);
+
+            return genericAssembler.toClass(restaurantAux, RestaurantModel.class);
         } catch (KitchenNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
