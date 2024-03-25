@@ -45,6 +45,18 @@ public class RestaurantRegisterService {
         }
     }
 
+    @Transactional
+    public void activate(Long id) {
+        Restaurant restaurant = findOrThrow(id);
+        restaurant.activate();
+    }
+
+    @Transactional
+    public void deactivate(Long id) {
+        Restaurant restaurant = findOrThrow(id);
+        restaurant.deactivate();
+    }
+
     public Restaurant findOrThrow(Long id) {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }

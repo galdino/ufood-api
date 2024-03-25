@@ -1,7 +1,5 @@
 package com.galdino.ufood.domain.model;
 
-import com.galdino.ufood.core.validation.Groups;
-import com.galdino.ufood.core.validation.Multiple;
 import com.galdino.ufood.core.validation.ValueZeroAddDescription;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,11 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -30,25 +23,12 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotNull
-//    @NotEmpty
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-//    @DecimalMin("0")
-//    @PositiveOrZero
-//    @DeliveryFee
-    @NotNull
-    @Multiple(number = 5)
     @Column(name = "delivery_fee", nullable = false)
     private BigDecimal deliveryFee;
 
-//    @JsonIgnore
-//    @JsonIgnoreProperties("hibernateLazyInitializer")
-    @Valid
-    @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
-    @NotNull
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
@@ -64,6 +44,9 @@ public class Restaurant {
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime updateDate;
 
+    @Column(nullable = false)
+    private Boolean active = Boolean.TRUE;
+
     @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant_payment_method", joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
@@ -71,5 +54,13 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
 
 }
