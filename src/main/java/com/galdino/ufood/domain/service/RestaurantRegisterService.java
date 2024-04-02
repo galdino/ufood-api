@@ -2,6 +2,7 @@ package com.galdino.ufood.domain.service;
 
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.RestaurantNotFoundException;
+import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
@@ -17,18 +18,25 @@ public class RestaurantRegisterService {
 
     private RestaurantRepository restaurantRepository;
     private KitchenRegisterService kitchenRegisterService;
+    private CityRegisterService cityRegisterService;
 
-    public RestaurantRegisterService(RestaurantRepository restaurantRepository, KitchenRegisterService kitchenRegisterService) {
+    public RestaurantRegisterService(RestaurantRepository restaurantRepository, KitchenRegisterService kitchenRegisterService,
+                                     CityRegisterService cityRegisterService) {
         this.restaurantRepository = restaurantRepository;
         this.kitchenRegisterService = kitchenRegisterService;
+        this.cityRegisterService = cityRegisterService;
     }
 
     @Transactional
     public Restaurant add(Restaurant restaurant) {
         Long kitchenId = restaurant.getKitchen().getId();
+        Long cityId = restaurant.getAddress().getCity().getId();
+
         Kitchen kitchen = kitchenRegisterService.findOrThrow(kitchenId);
+        City city = cityRegisterService.findOrThrow(cityId);
 
         restaurant.setKitchen(kitchen);
+        restaurant.getAddress().setCity(city);
 
         return restaurantRepository.save(restaurant);
     }

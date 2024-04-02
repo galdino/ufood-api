@@ -42,6 +42,10 @@ public class GenericAssembler {
         if (toObject instanceof Restaurant) {
             Restaurant restaurant = (Restaurant) toObject;
             restaurant.setKitchen(new Kitchen());
+
+            if (restaurant.getAddress() != null) {
+                restaurant.getAddress().setCity(new City());
+            }
         }
 
         if (toObject instanceof City) {

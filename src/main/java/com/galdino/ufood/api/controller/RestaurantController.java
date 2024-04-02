@@ -10,6 +10,7 @@ import com.galdino.ufood.api.model.RestaurantInput;
 import com.galdino.ufood.api.model.RestaurantModel;
 import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
+import com.galdino.ufood.domain.exception.CityNotFoundException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
@@ -68,7 +69,7 @@ public class RestaurantController {
             restaurant = restaurantRegisterService.add(restaurant);
 
             return genericAssembler.toClass(restaurant, RestaurantModel.class);
-        } catch (KitchenNotFoundException e) {
+        } catch (KitchenNotFoundException | CityNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
@@ -87,7 +88,7 @@ public class RestaurantController {
             restaurantAux = restaurantRegisterService.add(restaurantAux);
 
             return genericAssembler.toClass(restaurantAux, RestaurantModel.class);
-        } catch (KitchenNotFoundException e) {
+        } catch (KitchenNotFoundException | CityNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }
