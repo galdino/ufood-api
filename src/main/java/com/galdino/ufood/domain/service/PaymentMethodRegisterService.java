@@ -29,6 +29,7 @@ public class PaymentMethodRegisterService {
         return paymentMethodRepository.findById(id).orElseThrow(() -> new PaymentMethodNotFoundException(id));
     }
 
+    @Transactional
     public void remove(Long id) {
         try {
             paymentMethodRepository.deleteById(id);

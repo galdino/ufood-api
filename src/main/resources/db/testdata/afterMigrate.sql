@@ -8,6 +8,7 @@ delete from payment_method;
 delete from upermission;
 delete from restaurant_payment_method;
 delete from product;
+delete from ugroup;
 
 set foreign_key_checks = 1;
 
@@ -36,6 +37,10 @@ insert into restaurant (name, delivery_fee, kitchen_id, update_date, register_da
 insert into payment_method (id, description) values (1, 'Credit Card');
 insert into payment_method (id, description) values (2, 'Debit Card');
 insert into payment_method (id, description) values (3, 'Cash');
+
+insert into ugroup (id, name) values (1, 'Manager');
+insert into ugroup (id, name) values (2, 'Chef');
+insert into ugroup (id, name) values (3, 'Delivery');
 
 insert into upermission (id, name, description) values (1, 'CHECK_KITCHEN', 'Permission to check the kitchens');
 
