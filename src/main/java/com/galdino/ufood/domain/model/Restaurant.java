@@ -10,7 +10,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @ValueZeroAddDescription(fieldValue = "deliveryFee", fieldDescription = "name", mandatoryDescription = "Free Delivery")
 @Data
@@ -50,7 +52,7 @@ public class Restaurant {
     @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant_payment_method", joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();
+    private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
@@ -63,4 +65,11 @@ public class Restaurant {
         this.active = false;
     }
 
+    public boolean removePaymentMethod(PaymentMethod paymentMethod) {
+        return this.paymentMethods.remove(paymentMethod);
+    }
+
+    public boolean addPaymentMethod(PaymentMethod paymentMethod) {
+        return this.paymentMethods.add(paymentMethod);
+    }
 }

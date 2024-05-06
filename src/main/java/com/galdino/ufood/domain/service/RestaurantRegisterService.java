@@ -4,6 +4,7 @@ import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.RestaurantNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.model.Kitchen;
+import com.galdino.ufood.domain.model.PaymentMethod;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,12 +20,14 @@ public class RestaurantRegisterService {
     private RestaurantRepository restaurantRepository;
     private KitchenRegisterService kitchenRegisterService;
     private CityRegisterService cityRegisterService;
+    private PaymentMethodRegisterService paymentMethodRegisterService;
 
     public RestaurantRegisterService(RestaurantRepository restaurantRepository, KitchenRegisterService kitchenRegisterService,
-                                     CityRegisterService cityRegisterService) {
+                                     CityRegisterService cityRegisterService, PaymentMethodRegisterService paymentMethodRegisterService) {
         this.restaurantRepository = restaurantRepository;
         this.kitchenRegisterService = kitchenRegisterService;
         this.cityRegisterService = cityRegisterService;
+        this.paymentMethodRegisterService = paymentMethodRegisterService;
     }
 
     @Transactional
@@ -63,6 +66,22 @@ public class RestaurantRegisterService {
     public void deactivate(Long id) {
         Restaurant restaurant = findOrThrow(id);
         restaurant.deactivate();
+    }
+
+    @Transactional
+    public void detachPaymentMethod(Long rId, Long pId) {
+        Restaurant restaurant = findOrThrow(rId);
+        PaymentMethod paymentMethod = paymentMethodRegisterService.findOrThrow(pId);
+
+        restaurant.removePaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void attachPaymentMethod(Long rId, Long pId) {
+        Restaurant restaurant = findOrThrow(rId);
+        PaymentMethod paymentMethod = paymentMethodRegisterService.findOrThrow(pId);
+
+        restaurant.addPaymentMethod(paymentMethod);
     }
 
     public Restaurant findOrThrow(Long id) {

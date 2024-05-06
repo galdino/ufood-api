@@ -7,6 +7,7 @@ import com.galdino.ufood.domain.model.State;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class GenericAssembler {
         return modelMapper.map(object, type);
     }
 
-    public <T> List<T> toCollection(List<?> list, Class<T> type) {
+    public <T> List<T> toCollection(Collection<?> list, Class<T> type) {
         return list.stream()
                    .map(e -> toClass(e, type))
                    .collect(Collectors.toList());
