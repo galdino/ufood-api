@@ -130,6 +130,18 @@ public class RestaurantController {
         restaurantRegisterService.deactivate(id);
     }
 
+    @PutMapping("/{id}/closing")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void closing(@PathVariable Long id) {
+        restaurantRegisterService.close(id);
+    }
+
+    @PutMapping("/{id}/opening")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void opening(@PathVariable Long id) {
+        restaurantRegisterService.open(id);
+    }
+
     private void validate(Restaurant restaurantAux, String objectName) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurantAux, objectName);
         validator.validate(restaurantAux, bindingResult);

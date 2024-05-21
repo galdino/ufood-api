@@ -50,6 +50,9 @@ public class Restaurant {
     @Column(nullable = false)
     private Boolean active = Boolean.TRUE;
 
+    @Column(nullable = false)
+    private Boolean open = Boolean.TRUE;
+
     @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant_payment_method", joinColumns = @JoinColumn(name = "restaurant_id"),
                inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
@@ -80,5 +83,13 @@ public class Restaurant {
                             .findFirst()
                             .orElseThrow(() -> new ProductNotFoundException(
                                                     String.format("Unable to find product with id %d in restaurant with id %d", product.getId(), this.id)));
+    }
+
+    public void close() {
+        this.open = false;
+    }
+
+    public void open() {
+        this.open = true;
     }
 }

@@ -84,6 +84,18 @@ public class RestaurantRegisterService {
         restaurant.addPaymentMethod(paymentMethod);
     }
 
+    @Transactional
+    public void close(Long id) {
+        Restaurant restaurant = findOrThrow(id);
+        restaurant.close();
+    }
+
+    @Transactional
+    public void open(Long id) {
+        Restaurant restaurant = findOrThrow(id);
+        restaurant.open();
+    }
+
     public Restaurant findOrThrow(Long id) {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
