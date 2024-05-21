@@ -1,6 +1,7 @@
 package com.galdino.ufood.domain.model;
 
 import com.galdino.ufood.core.validation.ValueZeroAddDescription;
+import com.galdino.ufood.domain.exception.ProductNotFoundException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -71,5 +72,13 @@ public class Restaurant {
 
     public boolean addPaymentMethod(PaymentMethod paymentMethod) {
         return this.paymentMethods.add(paymentMethod);
+    }
+
+    public Product existsProduct(Product product) {
+        return this.products.stream()
+                            .filter(p -> p.equals(product))
+                            .findFirst()
+                            .orElseThrow(() -> new ProductNotFoundException(
+                                                    String.format("Unable to find product with id %d in restaurant with id %d", product.getId(), this.id)));
     }
 }
