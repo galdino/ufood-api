@@ -3,6 +3,7 @@ package com.galdino.ufood.domain.service;
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.UGroupNotFoundException;
 import com.galdino.ufood.domain.model.UGroup;
+import com.galdino.ufood.domain.model.UPermission;
 import com.galdino.ufood.domain.repository.UGroupRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,10 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UGroupRegisterService {
 
-    private UGroupRepository uGroupRepository;
+    private final UGroupRepository uGroupRepository;
 
-    public UGroupRegisterService(UGroupRepository uGroupRepository) {
+    private final UPermissionRegisterService uPermissionRegisterService;
+
+    public UGroupRegisterService(UGroupRepository uGroupRepository, UPermissionRegisterService uPermissionRegisterService) {
         this.uGroupRepository = uGroupRepository;
+        this.uPermissionRegisterService = uPermissionRegisterService;
     }
 
     @Transactional
@@ -39,4 +43,19 @@ public class UGroupRegisterService {
         }
     }
 
+    @Transactional
+    public void detachUPermission(Long gId, Long pId) {
+        UGroup uGroup = findOrThrow(gId);
+        UPermission uPermission = uPermissionRegisterService.findOrThrow(pId);
+
+        uGroup.removeUPermission(uPermission);
+    }
+
+    @Transactional
+    public void attachUPermission(Long gId, Long pId) {
+        UGroup uGroup = findOrThrow(gId);
+        UPermission uPermission = uPermissionRegisterService.findOrThrow(pId);
+
+        uGroup.addUPermission(uPermission);
+    }
 }

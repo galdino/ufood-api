@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -23,5 +23,13 @@ public class UGroup {
     @ManyToMany
     @JoinTable(name = "ugroup_upermission", joinColumns = @JoinColumn(name = "ugroup_id"),
                inverseJoinColumns = @JoinColumn(name = "upermission_id"))
-    private List<UPermission> uPermissions = new ArrayList<>();
+    private Set<UPermission> uPermissions = new HashSet<>();
+
+    public boolean removeUPermission(UPermission uPermission) {
+        return this.uPermissions.remove(uPermission);
+    }
+
+    public boolean addUPermission(UPermission uPermission) {
+        return this.uPermissions.add(uPermission);
+    }
 }
