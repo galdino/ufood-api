@@ -2,6 +2,7 @@ package com.galdino.ufood.domain.service;
 
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.UserNotFoundException;
+import com.galdino.ufood.domain.model.UGroup;
 import com.galdino.ufood.domain.model.User;
 import com.galdino.ufood.domain.repository.UserRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,8 +16,11 @@ public class UserRegisterService {
 
     private final UserRepository userRepository;
 
-    public UserRegisterService(UserRepository userRepository) {
+    private final UGroupRegisterService uGroupRegisterService;
+
+    public UserRegisterService(UserRepository userRepository, UGroupRegisterService uGroupRegisterService) {
         this.userRepository = userRepository;
+        this.uGroupRegisterService = uGroupRegisterService;
     }
 
     @Transactional
@@ -57,5 +61,21 @@ public class UserRegisterService {
 
         user.setPassword(newPassword);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void detachUGroup(Long uId, Long gId) {
+        User user = findOrThrow(uId);
+        UGroup uGroup = uGroupRegisterService.findOrThrow(gId);
+
+        user.removeUGroup(uGroup);
+    }
+
+    @Transactional
+    public void attachUGroup(Long uId, Long gId) {
+        User user = findOrThrow(uId);
+        UGroup uGroup = uGroupRegisterService.findOrThrow(gId);
+
+        user.addUGroup(uGroup);
     }
 }

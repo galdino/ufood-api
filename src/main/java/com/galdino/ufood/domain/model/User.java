@@ -6,8 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -35,9 +35,17 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_ugroup", joinColumns = @JoinColumn(name = "user_id"),
                inverseJoinColumns = @JoinColumn(name = "ugroup_id"))
-    private List<UGroup> uGroups = new ArrayList<>();
+    private Set<UGroup> uGroups = new HashSet<>();
 
     public boolean matchesPassword(String currentPassword) {
         return this.password.equals(currentPassword);
+    }
+
+    public boolean removeUGroup(UGroup uGroup) {
+        return this.uGroups.remove(uGroup);
+    }
+
+    public boolean addUGroup(UGroup uGroup) {
+        return this.uGroups.add(uGroup);
     }
 }

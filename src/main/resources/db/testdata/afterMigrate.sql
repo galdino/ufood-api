@@ -11,6 +11,7 @@ delete from product;
 delete from ugroup;
 delete from user;
 delete from ugroup_upermission;
+delete from user_ugroup;
 
 set foreign_key_checks = 1;
 
@@ -23,6 +24,7 @@ alter table upermission auto_increment = 1;
 alter table restaurant_payment_method auto_increment = 1;
 alter table product auto_increment = 1;
 alter table ugroup_upermission auto_increment = 1;
+alter table user_ugroup auto_increment = 1;
 
 insert into kitchen (id, name) values (1, 'Thai');
 insert into kitchen (id, name) values (2, 'Indian');
@@ -55,6 +57,8 @@ insert into upermission (id, name, description) values (2, 'EDIT_KITCHEN', 'Perm
 insert into restaurant_payment_method (restaurant_id, payment_method_id) values (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3);
 
 insert into ugroup_upermission (ugroup_id, upermission_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
+
+insert into user_ugroup (user_id, ugroup_id) values (1, 1), (1, 2), (2, 2);
 
 insert into product (name, description, price, active, restaurant_id) values ('Tom Yum Goong', 'This is a spicy shrimp soup that is famous all over the world.', 78.90, 1, 1);
 insert into product (name, description, price, active, restaurant_id) values ('Pad Tha', 'This is a signature dish in Thailand and is supposed to be on the menu of every restaurant in Thailand', 54.90, 1, 1);
