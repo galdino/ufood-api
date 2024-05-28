@@ -9,6 +9,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class RestaurantRegisterService {
 
@@ -66,6 +68,16 @@ public class RestaurantRegisterService {
     public void deactivate(Long id) {
         Restaurant restaurant = findOrThrow(id);
         restaurant.deactivate();
+    }
+
+    @Transactional
+    public void activate(List<Long> listIds) {
+        listIds.forEach(this::activate);
+    }
+
+    @Transactional
+    public void deactivate(List<Long> listIds) {
+        listIds.forEach(this::deactivate);
     }
 
     @Transactional

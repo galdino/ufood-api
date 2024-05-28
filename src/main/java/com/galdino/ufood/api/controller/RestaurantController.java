@@ -12,6 +12,7 @@ import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.CityNotFoundException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
+import com.galdino.ufood.domain.exception.RestaurantNotFoundException;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
@@ -128,6 +129,26 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivate(@PathVariable Long id) {
         restaurantRegisterService.deactivate(id);
+    }
+
+    @PutMapping("/activations")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void activateList(@RequestBody List<Long> listIds) {
+        try {
+            restaurantRegisterService.activate(listIds);
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/activations")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deactivateList(@RequestBody List<Long> listIds) {
+        try {
+            restaurantRegisterService.deactivate(listIds);
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     @PutMapping("/{id}/closing")
