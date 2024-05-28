@@ -61,6 +61,11 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "restaurant_user", joinColumns = @JoinColumn(name = "restaurant_id"),
+               inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
+
     public void activate() {
         this.active = true;
     }
@@ -91,5 +96,13 @@ public class Restaurant {
 
     public void open() {
         this.open = true;
+    }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
+    }
+
+    public void addUser(User user) {
+        this.users.add(user);
     }
 }

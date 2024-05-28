@@ -2,10 +2,7 @@ package com.galdino.ufood.domain.service;
 
 import com.galdino.ufood.domain.exception.EntityInUseException;
 import com.galdino.ufood.domain.exception.RestaurantNotFoundException;
-import com.galdino.ufood.domain.model.City;
-import com.galdino.ufood.domain.model.Kitchen;
-import com.galdino.ufood.domain.model.PaymentMethod;
-import com.galdino.ufood.domain.model.Restaurant;
+import com.galdino.ufood.domain.model.*;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,13 +18,16 @@ public class RestaurantRegisterService {
     private KitchenRegisterService kitchenRegisterService;
     private CityRegisterService cityRegisterService;
     private PaymentMethodRegisterService paymentMethodRegisterService;
+    private final UserRegisterService userRegisterService;
 
     public RestaurantRegisterService(RestaurantRepository restaurantRepository, KitchenRegisterService kitchenRegisterService,
-                                     CityRegisterService cityRegisterService, PaymentMethodRegisterService paymentMethodRegisterService) {
+                                     CityRegisterService cityRegisterService, PaymentMethodRegisterService paymentMethodRegisterService,
+                                     UserRegisterService userRegisterService) {
         this.restaurantRepository = restaurantRepository;
         this.kitchenRegisterService = kitchenRegisterService;
         this.cityRegisterService = cityRegisterService;
         this.paymentMethodRegisterService = paymentMethodRegisterService;
+        this.userRegisterService = userRegisterService;
     }
 
     @Transactional
@@ -85,6 +85,22 @@ public class RestaurantRegisterService {
     }
 
     @Transactional
+    public void detachUser(Long rId, Long uId) {
+        Restaurant restaurant = findOrThrow(rId);
+        User user = userRegisterService.findOrThrow(uId);
+
+        restaurant.removeUser(user);
+    }
+
+    @Transactional
+    public void attachUser(Long rId, Long uId) {
+        Restaurant restaurant = findOrThrow(rId);
+        User user = userRegisterService.findOrThrow(uId);
+
+        restaurant.addUser(user);
+    }
+
+    @Transactional
     public void close(Long id) {
         Restaurant restaurant = findOrThrow(id);
         restaurant.close();
@@ -99,4 +115,5 @@ public class RestaurantRegisterService {
     public Restaurant findOrThrow(Long id) {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
+
 }
