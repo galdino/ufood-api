@@ -1,0 +1,1 @@
+alter table uorder modify status varchar(10) not null;

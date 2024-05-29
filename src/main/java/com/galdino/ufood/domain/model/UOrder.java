@@ -47,7 +47,8 @@ public class UOrder {
     @Embedded
     private Address deliveryAddress;
 
-    private UOrderStatus status;
+    @Enumerated(EnumType.STRING)
+    private UOrderStatus status = UOrderStatus.CREATED;
 
     @OneToMany(mappedBy = "uorder")
     private List<UOrderItem> uorderItems = new ArrayList<>();
