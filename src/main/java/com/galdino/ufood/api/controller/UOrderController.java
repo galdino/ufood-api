@@ -2,6 +2,7 @@ package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.UOrderModel;
+import com.galdino.ufood.api.model.UOrderSummaryModel;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.repository.UOrderRepository;
 import com.galdino.ufood.domain.service.UOrderRegisterService;
@@ -29,8 +30,8 @@ public class UOrderController {
     }
 
     @GetMapping
-    public List<UOrderModel> list() {
-        return genericAssembler.toCollection(uOrderRepository.findAll(), UOrderModel.class);
+    public List<UOrderSummaryModel> list() {
+        return genericAssembler.toCollection(uOrderRepository.findAll(), UOrderSummaryModel.class);
     }
 
     @GetMapping("/{id}")
