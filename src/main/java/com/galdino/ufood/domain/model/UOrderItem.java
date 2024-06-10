@@ -28,4 +28,19 @@ public class UOrderItem {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+
+    public UOrderItem() {
+    }
+
+    public UOrderItem(Integer quantity, BigDecimal unitPrice, String notes, Product product) {
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.notes = notes;
+        this.product = product;
+    }
+
+    public void setTotalPrice() {
+        totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
+    }
 }

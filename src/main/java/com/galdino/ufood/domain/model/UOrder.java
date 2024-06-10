@@ -45,12 +45,12 @@ public class UOrder {
     private OffsetDateTime deliveredDate;
 
     @Embedded
-    private Address deliveryAddress;
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     private UOrderStatus status = UOrderStatus.CREATED;
 
-    @OneToMany(mappedBy = "uorder")
+    @OneToMany(mappedBy = "uorder", cascade = CascadeType.ALL)
     private List<UOrderItem> uorderItems = new ArrayList<>();
 
     @ManyToOne
@@ -64,4 +64,15 @@ public class UOrder {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void setPartialAmount() {
+        this.partialAmount = this.uorderItems
+                .stream()
+                .map(UOrderItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void setTotalAmount() {
+        this.totalAmount = this.partialAmount.add(this.deliveryFee);
+    }
 }
