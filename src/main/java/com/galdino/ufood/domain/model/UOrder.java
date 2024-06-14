@@ -1,6 +1,7 @@
 package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galdino.ufood.domain.model.status.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -65,6 +66,9 @@ public class UOrder {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Transient
+    private StatusSituation statusSituation;
+
     public void setPartialAmount() {
         this.partialAmount = this.uorderItems
                 .stream()
@@ -75,4 +79,20 @@ public class UOrder {
     public void setTotalAmount() {
         this.totalAmount = this.partialAmount.add(this.deliveryFee);
     }
+
+    public StatusSituation getStatusSituation() {
+        switch (this.status) {
+            case CREATED:
+                return new CreatedSituation();
+            case CONFIRMED:
+                return new ConfirmedSituation();
+            case DELIVERED:
+                return new DeliveredSituation();
+            case CANCELED:
+                return new CanceledSituation();
+            default: throw new IllegalStateException("Unexpected value: " + this.status);
+        }
+    }
+
+
 }
