@@ -19,8 +19,8 @@ public abstract class StatusSituation {
     }
 
     private void throwBE(UOrder uorder, UOrderStatus status) {
-        throw new BusinessException(String.format("Status of the uorder with id %d cannot be changed from %s to %s",
-                uorder.getId(), uorder.getStatus().getDescription(), status.getDescription()));
+        throw new BusinessException(String.format("Status of the uorder with code %s cannot be changed from %s to %s",
+                uorder.getCode(), uorder.getStatus().getDescription(), status.getDescription()));
     }
 
 }

@@ -33,9 +33,9 @@ public class UOrderRegisterService {
         this.genericAssembler = genericAssembler;
     }
 
-    public UOrder findOrThrow(Long id) {
-        return uOrderRepository.findById(id)
-                               .orElseThrow(() -> new UOrderNotFoundException(id));
+    public UOrder findOrThrow(String code) {
+        return uOrderRepository.findByCode(code)
+                               .orElseThrow(() -> new UOrderNotFoundException(code));
     }
 
     @Transactional

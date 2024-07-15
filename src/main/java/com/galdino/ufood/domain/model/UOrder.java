@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -21,6 +22,9 @@ public class UOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "code", nullable = false)
+    private String code;
 
     @Column(name = "partial_amount", nullable = false)
     private BigDecimal partialAmount;
@@ -92,6 +96,11 @@ public class UOrder {
                 return new CanceledSituation();
             default: throw new IllegalStateException("Unexpected value: " + this.status);
         }
+    }
+
+    @PrePersist
+    private void generateCode() {
+        this.code = UUID.randomUUID().toString();
     }
 
 

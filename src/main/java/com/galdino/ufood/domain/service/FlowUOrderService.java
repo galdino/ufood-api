@@ -15,20 +15,20 @@ public class FlowUOrderService {
     }
 
     @Transactional
-    public void confirm(Long id) {
-        UOrder uOrder = uOrderRegisterService.findOrThrow(id);
+    public void confirm(String code) {
+        UOrder uOrder = uOrderRegisterService.findOrThrow(code);
         uOrder.getStatusSituation().confirm(uOrder, UOrderStatus.CONFIRMED);
     }
 
     @Transactional
-    public void cancel(Long id) {
-        UOrder uOrder = uOrderRegisterService.findOrThrow(id);
+    public void cancel(String code) {
+        UOrder uOrder = uOrderRegisterService.findOrThrow(code);
         uOrder.getStatusSituation().cancel(uOrder, UOrderStatus.CANCELED);
     }
 
     @Transactional
-    public void deliver(Long id) {
-        UOrder uOrder = uOrderRegisterService.findOrThrow(id);
+    public void deliver(String code) {
+        UOrder uOrder = uOrderRegisterService.findOrThrow(code);
         uOrder.getStatusSituation().deliver(uOrder, UOrderStatus.DELIVERED);
     }
 }

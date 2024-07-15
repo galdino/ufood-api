@@ -74,15 +74,15 @@ insert into product (name, description, price, active, restaurant_id) values ('P
 insert into product (name, description, price, active, restaurant_id) values ('Masala Dosa', 'A traditional southern Indian dish made from a batter of soaked rice and lentils that is baked into a thin pancake and usually stuffed with potatoes, onions, and mustard seeds.', 5, 1, 3);
 insert into product (name, description, price, active, restaurant_id) values ('Rogan Josh', 'An aromatic lamb curry that is believed to be of Persian origin, although today it is more closely associated with the Kashmir region of India.', 20, 1, 3);
 
-insert into uorder (id, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
+insert into uorder (id, code, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
                     restaurant_id, address_zip_code, address_street, address_number, address_complement, address_district, address_city_id)
-values (1, 298.90, 10, 308.90, utc_timestamp, 'CREATED', 1, 1, 1, '38400-000', '5 Avenue', '3000', 'Floor 2', 'Broken', 1);
+values (1, 'f9981ca4-5a5e-4da3-af04-933861df3e55', 298.90, 10, 308.90, utc_timestamp, 'CREATED', 1, 1, 1, '38400-000', '5 Avenue', '3000', 'Floor 2', 'Broken', 1);
 
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (1, 1, 149.45, 149.45, 1, 1);
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (2, 1, 149.45, 149.45, 1, 2);
 
-insert into uorder (id, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
+insert into uorder (id, code, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
                     restaurant_id, address_zip_code, address_street, address_number, address_complement, address_district, address_city_id)
-values (2, 298.90, 10, 308.90, utc_timestamp, 'CREATED', 2, 2, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
+values (2, 'd178b637-a785-4768-a3cb-aa1ce5a8cdab', 298.90, 10, 308.90, utc_timestamp, 'CREATED', 2, 2, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
 
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (3, 1, 298.90, 298.90, 2, 4);

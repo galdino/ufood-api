@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/uorders/{id}")
+@RequestMapping(value = "/uorders/{code}")
 public class FlowUOrderController {
 
     private final FlowUOrderService flowUOrderService;
@@ -16,19 +16,19 @@ public class FlowUOrderController {
 
     @PutMapping("/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirm(@PathVariable Long id) {
-        flowUOrderService.confirm(id);
+    public void confirm(@PathVariable String code) {
+        flowUOrderService.confirm(code);
     }
 
     @PutMapping("/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancel(@PathVariable Long id) {
-        flowUOrderService.cancel(id);
+    public void cancel(@PathVariable String code) {
+        flowUOrderService.cancel(code);
     }
 
     @PutMapping("/deliver")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deliver(@PathVariable Long id) {
-        flowUOrderService.deliver(id);
+    public void deliver(@PathVariable String code) {
+        flowUOrderService.deliver(code);
     }
 }

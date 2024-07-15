@@ -35,9 +35,9 @@ public class UOrderController {
         return genericAssembler.toCollection(uOrderRepository.findAll(), UOrderSummaryModel.class);
     }
 
-    @GetMapping("/{id}")
-    public UOrderModel findById(@PathVariable Long id) {
-        UOrder uOrder = uOrderRegisterService.findOrThrow(id);
+    @GetMapping("/{code}")
+    public UOrderModel findByCode(@PathVariable String code) {
+        UOrder uOrder = uOrderRegisterService.findOrThrow(code);
         return genericAssembler.toClass(uOrder, UOrderModel.class);
     }
 

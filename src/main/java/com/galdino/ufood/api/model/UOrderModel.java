@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UOrderModel {
-    private Long id;
+    private String code;
     private BigDecimal partialAmount;
     private BigDecimal deliveryFee;
     private BigDecimal totalAmount;
