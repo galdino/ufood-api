@@ -1,13 +1,13 @@
 package com.galdino.ufood.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galdino.ufood.api.assembler.GenericAssembler;
-import com.galdino.ufood.api.assembler.RestaurantInputDiassembler;
-import com.galdino.ufood.api.assembler.RestaurantModelAssembler;
 import com.galdino.ufood.api.model.KitchenIdInput;
 import com.galdino.ufood.api.model.RestaurantInput;
 import com.galdino.ufood.api.model.RestaurantModel;
+import com.galdino.ufood.api.model.view.RestaurantView;
 import com.galdino.ufood.core.validation.ValidationException;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.CityNotFoundException;
@@ -41,7 +41,6 @@ public class RestaurantController {
     private GenericAssembler genericAssembler;
 
     public RestaurantController(RestaurantRepository restaurantRepository, RestaurantRegisterService restaurantRegisterService, SmartValidator validator,
-                                RestaurantModelAssembler restaurantModelAssembler, RestaurantInputDiassembler restaurantInputDiassembler,
                                 GenericAssembler genericAssembler) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegisterService = restaurantRegisterService;
@@ -49,9 +48,16 @@ public class RestaurantController {
         this.genericAssembler = genericAssembler;
     }
 
+    @JsonView(RestaurantView.Summary.class)
     @GetMapping
     public List<RestaurantModel> list() {
         return genericAssembler.toCollection(restaurantRepository.findAll(), RestaurantModel.class);
+    }
+
+    @JsonView(RestaurantView.NameOnly.class)
+    @GetMapping(params = "projection=name-only")
+    public List<RestaurantModel> listNameOnly() {
+        return list();
     }
 
     @GetMapping("/{id}")
