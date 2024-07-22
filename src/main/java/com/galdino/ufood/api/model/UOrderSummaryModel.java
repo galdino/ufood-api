@@ -1,6 +1,5 @@
 package com.galdino.ufood.api.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.galdino.ufood.domain.model.UOrderStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@JsonFilter("uOrderFilter")
+//@JsonFilter("uOrderFilter")
 @Getter
 @Setter
 public class UOrderSummaryModel {
