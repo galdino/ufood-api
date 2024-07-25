@@ -68,7 +68,7 @@ insert into user_ugroup (user_id, ugroup_id) values (1, 1), (1, 2), (2, 2);
 
 insert into restaurant_user (restaurant_id, user_id) values (1, 1), (2, 2), (2, 3), (3, 3);
 
-insert into product (name, description, price, active, restaurant_id) values ('Tom Yum Goong', 'This is a spicy shrimp soup that is famous all over the world.', 78.90, 1, 1);
+insert into product (name, description, price, active, restaurant_id) values ('Tom Yum Goong', 'This is a spicy shrimp soup that is famous all over the world.', 78.90, 0, 1);
 insert into product (name, description, price, active, restaurant_id) values ('Pad Tha', 'This is a signature dish in Thailand and is supposed to be on the menu of every restaurant in Thailand', 54.90, 1, 1);
 insert into product (name, description, price, active, restaurant_id) values ('Pad Tha', 'This is a signature dish in Thailand and is supposed to be on the menu of every restaurant in Thailand', 50, 1, 2);
 insert into product (name, description, price, active, restaurant_id) values ('Masala Dosa', 'A traditional southern Indian dish made from a batter of soaked rice and lentils that is baked into a thin pancake and usually stuffed with potatoes, onions, and mustard seeds.', 5, 1, 3);

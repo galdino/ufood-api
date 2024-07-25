@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/restaurants/{rId}/products")
@@ -28,9 +29,20 @@ public class RestaurantProductController {
     }
 
     @GetMapping
-    public List<ProductModel> list(@PathVariable Long rId) {
+    public List<ProductModel> list(@PathVariable Long rId,
+                                   @RequestParam(required = false) boolean addInactive) {
         Restaurant restaurant = restaurantRegisterService.findOrThrow(rId);
-        return genericAssembler.toCollection(restaurant.getProducts(), ProductModel.class);
+
+        List<Product> products;
+        if (addInactive) {
+            products = restaurant.getProducts();
+        } else {
+            products = restaurant.getProducts().stream()
+                                               .filter(Product::getActive)
+                                               .collect(Collectors.toList());
+        }
+
+        return genericAssembler.toCollection(products, ProductModel.class);
     }
 
     @GetMapping("/{pId}")
