@@ -76,7 +76,7 @@ insert into product (name, description, price, active, restaurant_id) values ('R
 
 insert into uorder (id, code, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
                     restaurant_id, address_zip_code, address_street, address_number, address_complement, address_district, address_city_id)
-values (1, 'f9981ca4-5a5e-4da3-af04-933861df3e55', 298.90, 10, 308.90, utc_timestamp, 'CREATED', 1, 1, 1, '38400-000', '5 Avenue', '3000', 'Floor 2', 'Broken', 1);
+values (1, 'f9981ca4-5a5e-4da3-af04-933861df3e55', 298.90, 10, 308.90, date_sub(utc_timestamp, interval 2 day), 'CREATED', 1, 1, 1, '38400-000', '5 Avenue', '3000', 'Floor 2', 'Broken', 1);
 
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (1, 1, 149.45, 149.45, 1, 1);
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (2, 1, 149.45, 149.45, 1, 2);

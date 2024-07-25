@@ -7,7 +7,9 @@ import com.galdino.ufood.api.model.UOrderSummaryModel;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.repository.UOrderRepository;
+import com.galdino.ufood.domain.repository.filter.UOrderFilter;
 import com.galdino.ufood.domain.service.UOrderRegisterService;
+import com.galdino.ufood.infrastructure.repository.spec.UOrderSpecs;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,8 +50,9 @@ public class UOrderController {
 //    }
 
     @GetMapping
-    public List<UOrderSummaryModel> list() {
-        return genericAssembler.toCollection(uOrderRepository.findAll(), UOrderSummaryModel.class);
+    public List<UOrderSummaryModel> search(UOrderFilter filter) {
+        List<UOrder> uOrderList = uOrderRepository.findAll(UOrderSpecs.useFilter(filter));
+        return genericAssembler.toCollection(uOrderList, UOrderSummaryModel.class);
     }
 
     @GetMapping("/{code}")
