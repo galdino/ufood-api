@@ -7,6 +7,10 @@ import com.galdino.ufood.api.model.KitchensXmlWrapper;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.service.KitchenRegisterService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +34,10 @@ public class KitchenController {
     }
 
     @GetMapping
-    public List<KitchenModel> list() {
-        return genericAssembler.toCollection(kitchenRepository.findAll(), KitchenModel.class);
+    public Page<KitchenModel> list(@PageableDefault(size = 5) Pageable pageable) {
+        List<KitchenModel> kitchenModelList = genericAssembler.toCollection(kitchenRepository.findAll(pageable).getContent(), KitchenModel.class);
+
+        return new PageImpl<>(kitchenModelList, pageable, kitchenModelList.size());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
