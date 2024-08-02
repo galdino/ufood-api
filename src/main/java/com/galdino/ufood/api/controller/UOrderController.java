@@ -10,6 +10,10 @@ import com.galdino.ufood.domain.repository.UOrderRepository;
 import com.galdino.ufood.domain.repository.filter.UOrderFilter;
 import com.galdino.ufood.domain.service.UOrderRegisterService;
 import com.galdino.ufood.infrastructure.repository.spec.UOrderSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,9 +54,12 @@ public class UOrderController {
 //    }
 
     @GetMapping
-    public List<UOrderSummaryModel> search(UOrderFilter filter) {
-        List<UOrder> uOrderList = uOrderRepository.findAll(UOrderSpecs.useFilter(filter));
-        return genericAssembler.toCollection(uOrderList, UOrderSummaryModel.class);
+    public Page<UOrderSummaryModel> search(UOrderFilter filter, @PageableDefault(size = 1) Pageable pageable) {
+        List<UOrder> uOrderList = uOrderRepository.findAll(UOrderSpecs.useFilter(filter), pageable).getContent();
+
+        List<UOrderSummaryModel> uOrderSummaryModelList = genericAssembler.toCollection(uOrderList, UOrderSummaryModel.class);
+
+        return new PageImpl<>(uOrderSummaryModelList, pageable, uOrderSummaryModelList.size());
     }
 
     @GetMapping("/{code}")

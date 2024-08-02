@@ -10,8 +10,10 @@ import java.util.ArrayList;
 public class UOrderSpecs {
     public static Specification<UOrder> useFilter(UOrderFilter filter) {
         return (root, criteriaQuery, builder) -> {
-            root.fetch("user");
-            root.fetch("restaurant").fetch("kitchen");
+            if (UOrder.class.equals(criteriaQuery.getResultType())) {
+                root.fetch("user");
+                root.fetch("restaurant").fetch("kitchen");
+            }
 
             var predicates = new ArrayList<>();
 
