@@ -4,12 +4,14 @@ import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.UOrderInput;
 import com.galdino.ufood.api.model.UOrderModel;
 import com.galdino.ufood.api.model.UOrderSummaryModel;
+import com.galdino.ufood.core.validation.data.PageableTranslator;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.repository.UOrderRepository;
 import com.galdino.ufood.domain.repository.filter.UOrderFilter;
 import com.galdino.ufood.domain.service.UOrderRegisterService;
 import com.galdino.ufood.infrastructure.repository.spec.UOrderSpecs;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -55,11 +57,22 @@ public class UOrderController {
 
     @GetMapping
     public Page<UOrderSummaryModel> search(UOrderFilter filter, @PageableDefault(size = 1) Pageable pageable) {
+        pageableTranslator(pageable);
+
         List<UOrder> uOrderList = uOrderRepository.findAll(UOrderSpecs.useFilter(filter), pageable).getContent();
 
         List<UOrderSummaryModel> uOrderSummaryModelList = genericAssembler.toCollection(uOrderList, UOrderSummaryModel.class);
 
         return new PageImpl<>(uOrderSummaryModelList, pageable, uOrderSummaryModelList.size());
+    }
+
+    private void pageableTranslator(Pageable pageable) {
+        ImmutableMap<String, String> map = ImmutableMap.of("code", "code",
+                                                           "restaurant.name", "restaurant.name",
+                                                           "userName", "user.name",
+                                                           "totalAmount", "totalAmount");
+
+        PageableTranslator.translate(pageable, map);
     }
 
     @GetMapping("/{code}")

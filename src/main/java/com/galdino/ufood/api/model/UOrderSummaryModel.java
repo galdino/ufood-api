@@ -18,5 +18,6 @@ public class UOrderSummaryModel {
     private UOrderStatus status;
     private OffsetDateTime registerDate;
     private RestaurantModelAux restaurant;
-    private UserModel user;
+//    private UserModel user;
+    private String userName;
 }
