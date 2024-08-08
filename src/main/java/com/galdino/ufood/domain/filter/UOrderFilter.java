@@ -1,4 +1,4 @@
-package com.galdino.ufood.domain.repository.filter;
+package com.galdino.ufood.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;

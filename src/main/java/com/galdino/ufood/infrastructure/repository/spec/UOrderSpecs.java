@@ -1,7 +1,7 @@
 package com.galdino.ufood.infrastructure.repository.spec;
 
+import com.galdino.ufood.domain.filter.UOrderFilter;
 import com.galdino.ufood.domain.model.UOrder;
-import com.galdino.ufood.domain.repository.filter.UOrderFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
