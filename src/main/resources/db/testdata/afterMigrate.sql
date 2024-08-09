@@ -86,3 +86,9 @@ insert into uorder (id, code, partial_amount, delivery_fee, total_amount, regist
 values (2, 'd178b637-a785-4768-a3cb-aa1ce5a8cdab', 298.90, 10, 308.90, utc_timestamp, 'CREATED', 2, 2, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
 
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (3, 1, 298.90, 298.90, 2, 4);
+
+insert into uorder (id, code, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
+                    restaurant_id, address_zip_code, address_street, address_number, address_complement, address_district, address_city_id)
+values (3, 'd178b637-a785-4768-a3cb-bb2dq4r3afcr', 149.45, 10, 159.45, utc_timestamp, 'CREATED', 2, 3, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
+
+insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (4, 1, 149.45, 149.45, 3, 1)
