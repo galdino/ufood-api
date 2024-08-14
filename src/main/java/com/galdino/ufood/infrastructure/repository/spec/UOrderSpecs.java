@@ -15,7 +15,7 @@ public class UOrderSpecs {
                 root.fetch("restaurant").fetch("kitchen");
             }
 
-            var predicates = new ArrayList<>();
+            var predicates = new ArrayList<Predicate>();
 
             if (filter.getUserId() != null) {
                 predicates.add(builder.equal(root.get("user"), filter.getUserId()));
