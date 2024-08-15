@@ -21,12 +21,17 @@ public class SaleQueryServiceImpl implements SaleQueryService {
     private EntityManager manager;
 
     @Override
-    public List<DailySale> findDailySales(DailySaleFilter filter) {
+    public List<DailySale> findDailySales(DailySaleFilter filter, String timeOffset) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<DailySale> query = builder.createQuery(DailySale.class);
         Root<UOrder> root = query.from(UOrder.class);
 
-        Expression<Date> registerDateFunction = builder.function("date", Date.class, root.get("registerDate"));
+        Expression<Date> convertTzFunction = builder.function("convert_tz", Date.class,
+                                                                    root.get("registerDate"),
+                                                                    builder.literal("+00:00"),
+                                                                    builder.literal(timeOffset));
+
+        Expression<Date> registerDateFunction = builder.function("date", Date.class, convertTzFunction);
 
         CompoundSelection<DailySale> selection = builder.construct(DailySale.class,
                                                                    registerDateFunction,
