@@ -1,4 +1,4 @@
-package com.galdino.ufood.infrastructure.service;
+package com.galdino.ufood.infrastructure.service.query;
 
 import com.galdino.ufood.domain.filter.DailySaleFilter;
 import com.galdino.ufood.domain.model.UOrder;
