@@ -10,15 +10,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = { FileSizeValidator.class })
-public @interface FileSize {
+@Constraint(validatedBy = { FileContentTypeValidator.class })
+public @interface FileContentType {
 
-    String message() default "maximum file size must be 500Kb";
+    String message() default "file content type must be jpeg or png";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
 
-    String max();
+    String[] allowed();
 
 }
