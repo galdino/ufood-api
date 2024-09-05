@@ -15,6 +15,7 @@ delete from ugroup_upermission;
 delete from user_ugroup;
 delete from uorder;
 delete from uorder_item;
+delete from product_image;
 
 set foreign_key_checks = 1;
 
