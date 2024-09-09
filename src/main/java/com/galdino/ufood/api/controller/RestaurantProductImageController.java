@@ -1,6 +1,12 @@
 package com.galdino.ufood.api.controller;
 
+import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.ProductImageInput;
+import com.galdino.ufood.api.model.ProductImageModel;
+import com.galdino.ufood.domain.model.Product;
+import com.galdino.ufood.domain.model.ProductImage;
+import com.galdino.ufood.domain.service.ProductImageService;
+import com.galdino.ufood.domain.service.ProductRegisterService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -8,28 +14,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.nio.file.Path;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/restaurants/{rId}/products/{pId}/image")
 public class RestaurantProductImageController {
 
+    private final ProductRegisterService productRegisterService;
+    private final ProductImageService productImageService;
+    private final GenericAssembler genericAssembler;
+
+    public RestaurantProductImageController(ProductRegisterService productRegisterService, ProductImageService productImageService, GenericAssembler genericAssembler) {
+        this.productRegisterService = productRegisterService;
+        this.productImageService = productImageService;
+        this.genericAssembler = genericAssembler;
+    }
+
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void uploadImage(@PathVariable Long rId, @PathVariable Long pId, @Valid ProductImageInput productImageInput) {
-        String fileName = UUID.randomUUID() + "_" + productImageInput.getFile().getOriginalFilename();
+    public ProductImageModel uploadImage(@PathVariable Long rId, @PathVariable Long pId, @Valid ProductImageInput productImageInput) {
+        Product product = productRegisterService.findOrThrow(rId, pId);
 
-        Path path = Path.of("/upload", fileName);
+        ProductImage productImageAux = ProductImage.builder()
+                                                   .product(product)
+                                                   .description(productImageInput.getDescription())
+                                                   .contentType(productImageInput.getFile().getContentType())
+                                                   .size(productImageInput.getFile().getSize())
+                                                   .fileName(productImageInput.getFile().getOriginalFilename())
+                                                   .build();
 
-        System.out.println(productImageInput.getDescription());
-        System.out.println(path);
-        System.out.println(productImageInput.getFile().getContentType());
+        ProductImage productImage = productImageService.add(productImageAux);
 
-        try {
-            productImageInput.getFile().transferTo(path);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return genericAssembler.toClass(productImage, ProductImageModel.class);
     }
 
 }

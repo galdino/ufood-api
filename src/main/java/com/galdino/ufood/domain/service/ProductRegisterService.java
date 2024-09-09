@@ -11,12 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductRegisterService {
 
     private final ProductRepository productRepository;
+    private final RestaurantRegisterService restaurantRegisterService;
     public ProductRegisterService(ProductRepository productRepository, RestaurantRegisterService restaurantRegisterService) {
         this.productRepository = productRepository;
+        this.restaurantRegisterService = restaurantRegisterService;
     }
 
     public Product findOrThrow(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    public Product findOrThrow(Long restaurantId, Long productId) {
+        Restaurant restaurant = restaurantRegisterService.findOrThrow(restaurantId);
+
+        Product productAux = new Product();
+        productAux.setId(productId);
+
+        return restaurant.existsProduct(productAux);
     }
 
     @Transactional

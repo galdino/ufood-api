@@ -4,5 +4,5 @@ import com.galdino.ufood.domain.model.Product;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends CustomJpaRepository<Product, Long> {
+public interface ProductRepository extends CustomJpaRepository<Product, Long>, ProductRepositoryQueries {
 }
