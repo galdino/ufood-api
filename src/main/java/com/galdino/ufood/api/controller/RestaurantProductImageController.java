@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/restaurants/{rId}/products/{pId}/image")
@@ -30,7 +31,7 @@ public class RestaurantProductImageController {
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ProductImageModel uploadImage(@PathVariable Long rId, @PathVariable Long pId, @Valid ProductImageInput productImageInput) {
+    public ProductImageModel uploadImage(@PathVariable Long rId, @PathVariable Long pId, @Valid ProductImageInput productImageInput) throws IOException {
         Product product = productRegisterService.findOrThrow(rId, pId);
 
         ProductImage productImageAux = ProductImage.builder()
@@ -41,7 +42,7 @@ public class RestaurantProductImageController {
                                                    .fileName(productImageInput.getFile().getOriginalFilename())
                                                    .build();
 
-        ProductImage productImage = productImageService.add(productImageAux);
+        ProductImage productImage = productImageService.add(productImageAux, productImageInput.getFile().getInputStream());
 
         return genericAssembler.toClass(productImage, ProductImageModel.class);
     }
