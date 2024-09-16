@@ -27,6 +27,18 @@ public class LocalImageStorageService implements ImageStorageService {
 
     }
 
+    @Override
+    public void remove(String fileName) {
+
+        try {
+            Path filePath = getFilePath(fileName);
+            Files.deleteIfExists(filePath);
+        } catch (Exception e) {
+            throw new StorageException("Image remove error.", e);
+        }
+
+    }
+
     private Path getFilePath(String fileName) {
         return imageDirectory.resolve(Path.of(fileName));
     }
