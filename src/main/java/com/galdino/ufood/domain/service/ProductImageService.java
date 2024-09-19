@@ -29,7 +29,7 @@ public class ProductImageService {
         String originalFileName = productImage.getFileName();
         String isPresentFileName = null;
 
-        Optional<ProductImage> productImageAux = productRepository.findProductImageById(restaurantId, productId);
+        Optional<ProductImage> productImageAux = getOptionalProductImage(restaurantId, productId);
         if (productImageAux.isPresent()) {
             isPresentFileName = productImageAux.get().getFileName();
             productRepository.delete(productImageAux.get());
@@ -48,6 +48,11 @@ public class ProductImageService {
         imageStorageService.replace(isPresentFileName, newImage);
 
         return productImage;
+    }
+
+    @Transactional
+    public Optional<ProductImage> getOptionalProductImage(Long restaurantId, Long productId) {
+        return productRepository.findProductImageById(restaurantId, productId);
     }
 
 }

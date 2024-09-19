@@ -3,18 +3,17 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.ProductImageInput;
 import com.galdino.ufood.api.model.ProductImageModel;
+import com.galdino.ufood.domain.exception.ProductNotFoundException;
 import com.galdino.ufood.domain.model.Product;
 import com.galdino.ufood.domain.model.ProductImage;
 import com.galdino.ufood.domain.service.ProductImageService;
 import com.galdino.ufood.domain.service.ProductRegisterService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/restaurants/{rId}/products/{pId}/image")
@@ -45,6 +44,19 @@ public class RestaurantProductImageController {
         ProductImage productImage = productImageService.add(productImageAux, productImageInput.getFile().getInputStream());
 
         return genericAssembler.toClass(productImage, ProductImageModel.class);
+    }
+
+    @GetMapping
+    public ProductImageModel findProductImage(@PathVariable Long rId, @PathVariable Long pId) {
+        Optional<ProductImage> optionalProductImage = productImageService.getOptionalProductImage(rId, pId);
+
+        if (optionalProductImage.isEmpty()) {
+            throw new ProductNotFoundException(
+                    String.format("Unable to find a image for product with id %d in restaurant with id %d", pId, rId));
+        }
+
+        return genericAssembler.toClass(optionalProductImage.get(), ProductImageModel.class);
+
     }
 
 }

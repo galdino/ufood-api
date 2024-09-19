@@ -12,6 +12,8 @@ public interface ImageStorageService {
     void storage(NewImage newImage);
     void remove(String fileName);
 
+    InputStream recover(String fileName);
+
     default void replace(String oldFileName, NewImage newImage) {
         storage(newImage);
 
