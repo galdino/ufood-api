@@ -12,11 +12,13 @@ import com.galdino.ufood.domain.service.ProductRegisterService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -65,17 +67,34 @@ public class RestaurantProductImageController {
 
     }
 
-    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> findImage(@PathVariable Long rId, @PathVariable Long pId) {
+    @GetMapping
+    public ResponseEntity<InputStreamResource> findImage(@PathVariable Long rId, @PathVariable Long pId,
+                                                         @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+        List<MediaType> acceptMediaTypes = MediaType.parseMediaTypes(acceptHeader);
+
         Optional<ProductImage> optionalProductImage = productImageService.getOptionalProductImage(rId, pId);
 
         if (optionalProductImage.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
+        MediaType imageMediaType = MediaType.parseMediaType(optionalProductImage.get().getContentType());
+        validateMediaType(acceptMediaTypes, imageMediaType);
+
         InputStream inputStream = imageStorageService.recover(optionalProductImage.get().getFileName());
 
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(new InputStreamResource(inputStream));
+        return ResponseEntity.ok()
+                             .contentType(imageMediaType)
+                             .body(new InputStreamResource(inputStream));
+    }
+
+    private void validateMediaType(List<MediaType> acceptMediaTypes, MediaType imageMediaType) throws HttpMediaTypeNotAcceptableException {
+        boolean anyMatchMediaType = acceptMediaTypes.stream()
+                                                    .anyMatch(mt -> mt.isCompatibleWith(imageMediaType));
+
+        if (!anyMatchMediaType) {
+            throw new HttpMediaTypeNotAcceptableException(acceptMediaTypes);
+        }
     }
 
 }
