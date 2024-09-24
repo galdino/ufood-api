@@ -10,6 +10,7 @@ import com.galdino.ufood.domain.service.ImageStorageService;
 import com.galdino.ufood.domain.service.ProductImageService;
 import com.galdino.ufood.domain.service.ProductRegisterService;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -86,6 +87,19 @@ public class RestaurantProductImageController {
         return ResponseEntity.ok()
                              .contentType(imageMediaType)
                              .body(new InputStreamResource(inputStream));
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProductImage(@PathVariable Long rId, @PathVariable Long pId) {
+        Optional<ProductImage> optionalProductImage = productImageService.getOptionalProductImage(rId, pId);
+
+        if (optionalProductImage.isEmpty()) {
+            throw new ProductNotFoundException(
+                    String.format("Unable to find a image for product with id %d in restaurant with id %d", pId, rId));
+        }
+
+        productImageService.remove(optionalProductImage.get());
     }
 
     private void validateMediaType(List<MediaType> acceptMediaTypes, MediaType imageMediaType) throws HttpMediaTypeNotAcceptableException {

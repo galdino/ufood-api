@@ -51,6 +51,14 @@ public class ProductImageService {
     }
 
     @Transactional
+    public void remove(ProductImage productImage) {
+        productRepository.delete(productImage);
+        productRepository.flush();
+
+        imageStorageService.remove(productImage.getFileName());
+    }
+
+    @Transactional
     public Optional<ProductImage> getOptionalProductImage(Long restaurantId, Long productId) {
         return productRepository.findProductImageById(restaurantId, productId);
     }
