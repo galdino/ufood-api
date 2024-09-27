@@ -1,7 +1,7 @@
 package com.galdino.ufood.infrastructure.service.storage;
 
+import com.galdino.ufood.core.validation.storage.StorageProperties;
 import com.galdino.ufood.domain.service.ImageStorageService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -12,8 +12,11 @@ import java.nio.file.Path;
 @Service
 public class LocalImageStorageService implements ImageStorageService {
 
-    @Value("${ufood.local.storage.directory}")
-    private Path imageDirectory;
+    private final StorageProperties storageProperties;
+
+    public LocalImageStorageService(StorageProperties storageProperties) {
+        this.storageProperties = storageProperties;
+    }
 
     @Override
     public void storage(NewImage newImage) {
@@ -51,6 +54,6 @@ public class LocalImageStorageService implements ImageStorageService {
     }
 
     private Path getFilePath(String fileName) {
-        return imageDirectory.resolve(Path.of(fileName));
+        return storageProperties.getLocal().getDirectory().resolve(Path.of(fileName));
     }
 }
