@@ -2,14 +2,13 @@ package com.galdino.ufood.infrastructure.service.storage;
 
 import com.galdino.ufood.core.validation.storage.StorageProperties;
 import com.galdino.ufood.domain.service.ImageStorageService;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
+//@Service
 public class LocalImageStorageService implements ImageStorageService {
 
     private final StorageProperties storageProperties;

@@ -43,6 +43,7 @@ public class ProductImageService {
         NewImage newImage = NewImage.builder()
                                     .fileName(productImage.getFileName())
                                     .inputStream(fileData)
+                                    .contentType(productImage.getContentType())
                                     .build();
 
         imageStorageService.replace(isPresentFileName, newImage);

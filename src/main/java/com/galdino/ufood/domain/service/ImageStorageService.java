@@ -31,6 +31,7 @@ public interface ImageStorageService {
     class NewImage {
         private String fileName;
         private InputStream inputStream;
+        private String contentType;
     }
 
 }
