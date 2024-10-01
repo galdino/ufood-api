@@ -7,9 +7,11 @@ import com.galdino.ufood.domain.exception.ProductNotFoundException;
 import com.galdino.ufood.domain.model.Product;
 import com.galdino.ufood.domain.model.ProductImage;
 import com.galdino.ufood.domain.service.ImageStorageService;
+import com.galdino.ufood.domain.service.ImageStorageService.RecoveredImage;
 import com.galdino.ufood.domain.service.ProductImageService;
 import com.galdino.ufood.domain.service.ProductRegisterService;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +70,7 @@ public class RestaurantProductImageController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> findImage(@PathVariable Long rId, @PathVariable Long pId,
+    public ResponseEntity<?> findImage(@PathVariable Long rId, @PathVariable Long pId,
                                                          @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         List<MediaType> acceptMediaTypes = MediaType.parseMediaTypes(acceptHeader);
 
@@ -82,11 +83,18 @@ public class RestaurantProductImageController {
         MediaType imageMediaType = MediaType.parseMediaType(optionalProductImage.get().getContentType());
         validateMediaType(acceptMediaTypes, imageMediaType);
 
-        InputStream inputStream = imageStorageService.recover(optionalProductImage.get().getFileName());
+        RecoveredImage recoveredImage = imageStorageService.recover(optionalProductImage.get().getFileName());
 
-        return ResponseEntity.ok()
-                             .contentType(imageMediaType)
-                             .body(new InputStreamResource(inputStream));
+        if (recoveredImage.isUrl()) {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                                 .header(HttpHeaders.LOCATION, recoveredImage.getUrl())
+                                 .build();
+        } else {
+            return ResponseEntity.ok()
+                                 .contentType(imageMediaType)
+                                 .body(new InputStreamResource(recoveredImage.getInputStream()));
+        }
+
     }
 
     @DeleteMapping

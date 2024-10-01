@@ -4,7 +4,6 @@ import com.galdino.ufood.core.validation.storage.StorageProperties;
 import com.galdino.ufood.domain.service.ImageStorageService;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -43,10 +42,10 @@ public class LocalImageStorageService implements ImageStorageService {
     }
 
     @Override
-    public InputStream recover(String fileName) {
+    public RecoveredImage recover(String fileName) {
         try {
             Path filePath = getFilePath(fileName);
-            return Files.newInputStream(filePath);
+            return RecoveredImage.builder().inputStream(Files.newInputStream(filePath)).build();
         } catch (Exception e) {
             throw new StorageException("Image retrieving error.", e);
         }

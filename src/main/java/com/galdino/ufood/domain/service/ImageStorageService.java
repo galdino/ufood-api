@@ -12,7 +12,7 @@ public interface ImageStorageService {
     void storage(NewImage newImage);
     void remove(String fileName);
 
-    InputStream recover(String fileName);
+    RecoveredImage recover(String fileName);
 
     default void replace(String oldFileName, NewImage newImage) {
         storage(newImage);
@@ -32,6 +32,21 @@ public interface ImageStorageService {
         private String fileName;
         private InputStream inputStream;
         private String contentType;
+    }
+
+    @Builder
+    @Getter
+    class RecoveredImage {
+        private InputStream inputStream;
+        private String url;
+
+        public boolean isUrl() {
+            return url != null;
+        }
+
+        public boolean isInputStream() {
+            return inputStream != null;
+        }
     }
 
 }

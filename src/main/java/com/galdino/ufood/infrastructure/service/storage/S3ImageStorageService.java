@@ -9,7 +9,7 @@ import com.galdino.ufood.core.validation.storage.StorageProperties;
 import com.galdino.ufood.domain.service.ImageStorageService;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
+import java.net.URL;
 
 @Service
 public class S3ImageStorageService implements ImageStorageService {
@@ -56,8 +56,12 @@ public class S3ImageStorageService implements ImageStorageService {
     }
 
     @Override
-    public InputStream recover(String fileName) {
-        return null;
+    public RecoveredImage recover(String fileName) {
+        String filePath = getFilePath(fileName);
+
+        URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), filePath);
+
+        return RecoveredImage.builder().url(url.toString()).build();
     }
 
     private String getFilePath(String fileName) {
