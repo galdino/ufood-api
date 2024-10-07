@@ -4,17 +4,20 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.galdino.ufood.domain.service.ImageStorageService;
+import com.galdino.ufood.infrastructure.service.storage.LocalImageStorageService;
+import com.galdino.ufood.infrastructure.service.storage.S3ImageStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.galdino.ufood.core.validation.storage.StorageProperties.StorageType;
+
 @Configuration
-public class AmazonS3Config {
+public class StorageConfig {
 
-    private final StorageProperties storageProperties;
-
-    public AmazonS3Config(StorageProperties storageProperties) {
-        this.storageProperties = storageProperties;
-    }
+    @Autowired
+    private StorageProperties storageProperties;
 
     @Bean
     public AmazonS3 amazonS3() {
@@ -25,6 +28,15 @@ public class AmazonS3Config {
                                     .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
                                     .withRegion(storageProperties.getS3().getRegion())
                                     .build();
+    }
+
+    @Bean
+    public ImageStorageService imageStorageService() {
+        if (StorageType.S3.equals(storageProperties.getType())) {
+            return new S3ImageStorageService();
+        } else {
+            return new LocalImageStorageService(storageProperties);
+        }
     }
 
 }

@@ -7,20 +7,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.galdino.ufood.core.validation.storage.StorageProperties;
 import com.galdino.ufood.domain.service.ImageStorageService;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 
-@Service
 public class S3ImageStorageService implements ImageStorageService {
 
-    private final StorageProperties storageProperties;
-    private final AmazonS3 amazonS3;
-
-    public S3ImageStorageService(StorageProperties storageProperties, AmazonS3 amazonS3) {
-        this.storageProperties = storageProperties;
-        this.amazonS3 = amazonS3;
-    }
+    @Autowired
+    private StorageProperties storageProperties;
+    @Autowired
+    private AmazonS3 amazonS3;
 
     @Override
     public void storage(NewImage newImage) {
