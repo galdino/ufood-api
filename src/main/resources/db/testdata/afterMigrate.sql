@@ -56,7 +56,7 @@ insert into ugroup (id, name) values (3, 'Delivery');
 
 insert into user (id, name, email, password, register_date) values (1, 'Bob Brown', '9vKb5@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
 insert into user (id, name, email, password, register_date) values (2, 'Maria Green', 'ZLXO3@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
-insert into user (id, name, email, password, register_date) values (3, 'Alex Green', '7lC5d@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
+insert into user (id, name, email, password, register_date) values (3, 'Alex Green', 'fgaldinoo@gmail.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
 
 insert into upermission (id, name, description) values (1, 'CHECK_KITCHEN', 'Permission to check the kitchens');
 insert into upermission (id, name, description) values (2, 'EDIT_KITCHEN', 'Permission to edit kitchens');
@@ -90,6 +90,6 @@ insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, produ
 
 insert into uorder (id, code, partial_amount, delivery_fee, total_amount, register_date, status, payment_method_id, user_id,
                     restaurant_id, address_zip_code, address_street, address_number, address_complement, address_district, address_city_id)
-values (3, 'd178b637-a785-4768-a3cb-bb2dq4r3afcr', 149.45, 10, 159.45, utc_timestamp, 'CONFIRMED', 2, 3, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
+values (3, 'd178b637-a785-4768-a3cb-bb2dq4r3afcr', 149.45, 10, 159.45, utc_timestamp, 'CREATED', 2, 3, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
 
 insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (4, 1, 149.45, 149.45, 3, 1)

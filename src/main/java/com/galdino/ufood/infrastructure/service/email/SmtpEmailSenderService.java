@@ -33,7 +33,7 @@ public class SmtpEmailSenderService implements EmailSenderService {
 
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
-            throw new EmailException("Smtp email sender error.");
+            throw new EmailException("Smtp email sender error.", e);
         }
 
     }
