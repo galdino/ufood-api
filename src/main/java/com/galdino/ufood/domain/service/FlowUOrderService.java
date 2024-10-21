@@ -24,11 +24,12 @@ public class FlowUOrderService {
         uOrder.getStatusSituation().confirm(uOrder, UOrderStatus.CONFIRMED);
 
         String subject = String.format("%s - Order confirmation", uOrder.getRestaurant().getName());
-        String body = String.format("The order <strong>%s</strong> was confirmed!", uOrder.getCode());
+//        String body = String.format("The order <strong>%s</strong> was confirmed!", uOrder.getCode());
 
         Message message = Message.builder()
                                  .subject(subject)
-                                 .body(body)
+                                 .body("order-confirmed.html")
+                                 .variable("uorder", uOrder)
                                  .recipient(uOrder.getUser().getEmail())
                                  .build();
 
