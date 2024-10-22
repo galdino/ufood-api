@@ -11,17 +11,17 @@
 		<#list uorder.uorderItems as item>
 		<tr>
 			<td style="padding: 10px 0">${item.quantity}x ${item.product.name}</td>
-			<td style="width: 30px">${item.totalPrice}</td>
+			<td style="width: 30px">${item.totalPrice?string.currency}</td>
 		</tr>
 		</#list>
 
 		<tr>
 			<td style="padding: 10px 0">Delivery Fee</td>
-			<td>${uorder.deliveryFee}</td>
+			<td>${uorder.deliveryFee?string.currency}</td>
 		</tr>
 		<tr style="font-weight: bold">
 			<td style="padding: 10px 0">Total Amount</td>
-			<td>${uorder.totalAmount}</td>
+			<td>${uorder.totalAmount?string.currency}</td>
 		</tr>
 	</table>
 	
