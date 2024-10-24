@@ -17,5 +17,10 @@ public class EmailProperties {
 
     @NotNull
     private String sender;
+    private EmailSenderType type = EmailSenderType.FAKE;
+
+    public enum EmailSenderType {
+        FAKE, SMTP
+    }
 
 }

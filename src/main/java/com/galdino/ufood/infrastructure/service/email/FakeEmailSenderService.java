@@ -4,17 +4,15 @@ import com.galdino.ufood.core.validation.email.EmailProperties;
 import com.galdino.ufood.domain.service.EmailSenderService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import javax.mail.internet.MimeMessage;
+@Service
+@Slf4j
+public class FakeEmailSenderService implements EmailSenderService {
 
-public class SmtpEmailSenderService implements EmailSenderService {
-
-    @Autowired
-    private JavaMailSender javaMailSender;
     @Autowired
     private EmailProperties emailProperties;
     @Autowired
@@ -24,20 +22,17 @@ public class SmtpEmailSenderService implements EmailSenderService {
     public void send(Message message) {
 
         try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
-            mimeMessageHelper.setFrom(emailProperties.getSender());
-            mimeMessageHelper.setTo(message.getRecipients().toArray(new String[0]));
-            mimeMessageHelper.setSubject(message.getSubject());
+            log.info("Sending email...");
+            log.info(String.format("Sender: %s", emailProperties.getSender()));
+            log.info(String.format("Recipients: %s", message.getRecipients().toArray(new String[0])));
+            log.info(String.format("Subject: %s", message.getSubject()));
 
             String body = processTemplate(message);
 
-            mimeMessageHelper.setText(body, true);
-
-            javaMailSender.send(mimeMessage);
+            log.info(String.format("Body: %s", body));
         } catch (Exception e) {
-            throw new EmailException("Smtp email sender error.", e);
+            throw new EmailException("Fake email sender error.", e);
         }
 
     }
@@ -48,7 +43,7 @@ public class SmtpEmailSenderService implements EmailSenderService {
 
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, message.getVariables());
         } catch (Exception e) {
-            throw new EmailException("Smtp email sender process template error.", e);
+            throw new EmailException("Fake email sender process template error.", e);
         }
     }
 }
