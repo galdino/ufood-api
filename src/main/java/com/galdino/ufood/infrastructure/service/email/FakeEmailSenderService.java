@@ -5,7 +5,6 @@ import com.galdino.ufood.domain.service.EmailSenderService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
@@ -13,10 +12,13 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 @Slf4j
 public class FakeEmailSenderService implements EmailSenderService {
 
-    @Autowired
     private EmailProperties emailProperties;
-    @Autowired
     private Configuration freemarkerConfig;
+
+    public FakeEmailSenderService(EmailProperties emailProperties, Configuration freemarkerConfig) {
+        this.emailProperties = emailProperties;
+        this.freemarkerConfig = freemarkerConfig;
+    }
 
     @Override
     public void send(Message message) {

@@ -4,7 +4,6 @@ import com.galdino.ufood.core.validation.email.EmailProperties;
 import com.galdino.ufood.domain.service.EmailSenderService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -13,12 +12,15 @@ import javax.mail.internet.MimeMessage;
 
 public class SmtpEmailSenderService implements EmailSenderService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-    @Autowired
     private EmailProperties emailProperties;
-    @Autowired
+    private JavaMailSender javaMailSender;
     private Configuration freemarkerConfig;
+
+    public SmtpEmailSenderService(EmailProperties emailProperties, JavaMailSender javaMailSender, Configuration freemarkerConfig) {
+        this.emailProperties = emailProperties;
+        this.javaMailSender = javaMailSender;
+        this.freemarkerConfig = freemarkerConfig;
+    }
 
     @Override
     public void send(Message message) {
