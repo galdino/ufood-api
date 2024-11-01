@@ -9,10 +9,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
+import java.util.Set;
 
 public class SmtpEmailSenderService implements EmailSenderService {
 
-    private EmailProperties emailProperties;
+    public EmailProperties emailProperties;
     private JavaMailSender javaMailSender;
     private Configuration freemarkerConfig;
 
@@ -24,13 +25,20 @@ public class SmtpEmailSenderService implements EmailSenderService {
 
     @Override
     public void send(Message message) {
+        callSendMessage(message);
+    }
 
+    public void callSendMessage(Message message) {
+        sendMessage(message, message.getRecipients());
+    }
+
+    public void sendMessage(Message message, Set<String> recipients) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
             mimeMessageHelper.setFrom(emailProperties.getSender());
-            mimeMessageHelper.setTo(message.getRecipients().toArray(new String[0]));
+            mimeMessageHelper.setTo(recipients.toArray(new String[0]));
             mimeMessageHelper.setSubject(message.getSubject());
 
             String body = processTemplate(message);
@@ -41,7 +49,6 @@ public class SmtpEmailSenderService implements EmailSenderService {
         } catch (Exception e) {
             throw new EmailException("Smtp email sender error.", e);
         }
-
     }
 
     private String processTemplate(Message message) {

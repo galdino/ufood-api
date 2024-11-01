@@ -2,12 +2,11 @@ package com.galdino.ufood.core.validation.email;
 
 import com.galdino.ufood.domain.service.EmailSenderService;
 import com.galdino.ufood.infrastructure.service.email.FakeEmailSenderService;
+import com.galdino.ufood.infrastructure.service.email.SandboxEmailSenderService;
 import com.galdino.ufood.infrastructure.service.email.SmtpEmailSenderService;
 import freemarker.template.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
-
-import static com.galdino.ufood.core.validation.email.EmailProperties.EmailSenderType;
 
 @org.springframework.context.annotation.Configuration
 public class EmailSenderConfig {
@@ -24,10 +23,17 @@ public class EmailSenderConfig {
 
     @Bean
     public EmailSenderService emailSenderService() {
-        if (EmailSenderType.SMTP.equals(emailProperties.getType())) {
-            return new SmtpEmailSenderService(emailProperties, javaMailSender, freemarkerConfig);
-        } else {
-            return new FakeEmailSenderService(emailProperties, freemarkerConfig);
+
+        switch (emailProperties.getType()) {
+            case SMTP:
+                return new SmtpEmailSenderService(emailProperties, javaMailSender, freemarkerConfig);
+            case FAKE:
+                return new FakeEmailSenderService(emailProperties, freemarkerConfig);
+            case SANDBOX:
+                return new SandboxEmailSenderService(emailProperties, javaMailSender, freemarkerConfig);
+            default:
+                throw new RuntimeException();
         }
+
     }
 }
