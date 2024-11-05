@@ -13,11 +13,6 @@ public class SandboxEmailSenderService extends SmtpEmailSenderService {
     }
 
     @Override
-    public void send(Message message) {
-        super.send(message);
-    }
-
-    @Override
     public void callSendMessage(Message message) {
         super.sendMessage(message, Collections.singleton(emailProperties.getRecipients()));
     }

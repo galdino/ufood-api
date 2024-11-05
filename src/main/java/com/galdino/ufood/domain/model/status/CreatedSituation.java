@@ -1,5 +1,6 @@
 package com.galdino.ufood.domain.model.status;
 
+import com.galdino.ufood.domain.event.UOrderConfirmedEvent;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.model.UOrderStatus;
 
@@ -10,6 +11,7 @@ public class CreatedSituation extends StatusSituation {
     public void confirm(UOrder uorder, UOrderStatus status) {
         uorder.setStatus(status);
         uorder.setConfirmedDate(OffsetDateTime.now());
+        uorder.registerEventUOrder(new UOrderConfirmedEvent(uorder));
     }
 
     @Override

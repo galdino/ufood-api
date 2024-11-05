@@ -1,10 +1,12 @@
 package com.galdino.ufood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galdino.ufood.domain.event.UOrderConfirmedEvent;
 import com.galdino.ufood.domain.model.status.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,7 +18,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class UOrder {
+public class UOrder extends AbstractAggregateRoot<UOrder> {
 
     @EqualsAndHashCode.Include
     @Id
@@ -101,6 +103,10 @@ public class UOrder {
     @PrePersist
     private void generateCode() {
         this.code = UUID.randomUUID().toString();
+    }
+
+    public void registerEventUOrder(UOrderConfirmedEvent event) {
+        super.registerEvent(event);
     }
 
 

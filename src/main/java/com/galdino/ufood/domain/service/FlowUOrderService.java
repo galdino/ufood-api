@@ -2,20 +2,19 @@ package com.galdino.ufood.domain.service;
 
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.model.UOrderStatus;
+import com.galdino.ufood.domain.repository.UOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.galdino.ufood.domain.service.EmailSenderService.Message;
 
 @Service
 public class FlowUOrderService {
 
     private final UOrderRegisterService uOrderRegisterService;
-    private final EmailSenderService emailSenderService;
+    private final UOrderRepository uOrderRepository;
 
-    public FlowUOrderService(UOrderRegisterService uOrderRegisterService, EmailSenderService emailSenderService) {
+    public FlowUOrderService(UOrderRegisterService uOrderRegisterService, EmailSenderService emailSenderService, UOrderRepository uOrderRepository) {
         this.uOrderRegisterService = uOrderRegisterService;
-        this.emailSenderService = emailSenderService;
+        this.uOrderRepository = uOrderRepository;
     }
 
     @Transactional
@@ -23,17 +22,7 @@ public class FlowUOrderService {
         UOrder uOrder = uOrderRegisterService.findOrThrow(code);
         uOrder.getStatusSituation().confirm(uOrder, UOrderStatus.CONFIRMED);
 
-        String subject = String.format("%s - Order confirmation", uOrder.getRestaurant().getName());
-//        String body = String.format("The order <strong>%s</strong> was confirmed!", uOrder.getCode());
-
-        Message message = Message.builder()
-                                 .subject(subject)
-                                 .body("order-confirmed.html")
-                                 .variable("uorder", uOrder)
-                                 .recipient(uOrder.getUser().getEmail())
-                                 .build();
-
-        emailSenderService.send(message);
+        uOrderRepository.save(uOrder);
     }
 
     @Transactional
