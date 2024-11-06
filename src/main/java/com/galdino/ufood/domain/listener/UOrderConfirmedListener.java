@@ -4,8 +4,9 @@ import com.galdino.ufood.domain.event.UOrderConfirmedEvent;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.service.EmailSenderService;
 import com.galdino.ufood.domain.service.EmailSenderService.Message;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class UOrderConfirmedListener {
@@ -16,8 +17,10 @@ public class UOrderConfirmedListener {
         this.emailSenderService = emailSenderService;
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void whenConfirmingUOrder(UOrderConfirmedEvent event) {
+
+//        if(true) throw new RuntimeException();
 
         UOrder uOrder = event.getUOrder();
 
