@@ -1,5 +1,6 @@
 package com.galdino.ufood.domain.model.status;
 
+import com.galdino.ufood.domain.event.UOrderCanceledEvent;
 import com.galdino.ufood.domain.event.UOrderConfirmedEvent;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.model.UOrderStatus;
@@ -18,5 +19,6 @@ public class CreatedSituation extends StatusSituation {
     public void cancel(UOrder uorder, UOrderStatus status) {
         uorder.setStatus(status);
         uorder.setCanceledDate(OffsetDateTime.now());
+        uorder.registerEventUOrder(new UOrderCanceledEvent(uorder));
     }
 }

@@ -1,6 +1,6 @@
 package com.galdino.ufood.domain.listener;
 
-import com.galdino.ufood.domain.event.UOrderConfirmedEvent;
+import com.galdino.ufood.domain.event.UOrderCanceledEvent;
 import com.galdino.ufood.domain.model.UOrder;
 import com.galdino.ufood.domain.service.EmailSenderService;
 import com.galdino.ufood.domain.service.EmailSenderService.Message;
@@ -9,22 +9,22 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
-public class UOrderConfirmedListener {
+public class UOrderCanceledListener {
 
     private final EmailSenderService emailSenderService;
 
-    public UOrderConfirmedListener(EmailSenderService emailSenderService) {
+    public UOrderCanceledListener(EmailSenderService emailSenderService) {
         this.emailSenderService = emailSenderService;
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void whenConfirmingUOrder(UOrderConfirmedEvent event) {
+    public void whenConfirmingUOrder(UOrderCanceledEvent event) {
 
 //        if(true) throw new RuntimeException();
 
         UOrder uOrder = event.getUOrder();
 
-        String subject = String.format("%s - Order confirmation", uOrder.getRestaurant().getName());
+        String subject = String.format("%s - Order cancellation", uOrder.getRestaurant().getName());
 
         Message message = Message.builder()
                                  .subject(subject)

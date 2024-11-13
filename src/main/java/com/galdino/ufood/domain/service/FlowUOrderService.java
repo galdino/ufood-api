@@ -29,6 +29,8 @@ public class FlowUOrderService {
     public void cancel(String code) {
         UOrder uOrder = uOrderRegisterService.findOrThrow(code);
         uOrder.getStatusSituation().cancel(uOrder, UOrderStatus.CANCELED);
+
+        uOrderRepository.save(uOrder);
     }
 
     @Transactional
