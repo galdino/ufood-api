@@ -18,7 +18,7 @@ public class UOrderCanceledListener {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void whenConfirmingUOrder(UOrderCanceledEvent event) {
+    public void whenCancelingUOrder(UOrderCanceledEvent event) {
 
 //        if(true) throw new RuntimeException();
 
