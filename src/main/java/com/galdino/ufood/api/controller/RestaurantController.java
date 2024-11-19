@@ -17,9 +17,7 @@ import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.repository.RestaurantRepository;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -33,6 +31,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/restaurants")
 public class RestaurantController {
@@ -52,19 +51,15 @@ public class RestaurantController {
 
     @JsonView(RestaurantView.Summary.class)
     @GetMapping
-    public ResponseEntity<List<RestaurantModel>> list() {
-        List<RestaurantModel> restaurantModelList = genericAssembler.toCollection(restaurantRepository.findAll(),
-                                                                                  RestaurantModel.class);
-        return ResponseEntity.ok()
-                             .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-                             .body(restaurantModelList);
+    public List<RestaurantModel> list() {
+        return genericAssembler.toCollection(restaurantRepository.findAll(), RestaurantModel.class);
     }
 
-//    @JsonView(RestaurantView.NameOnly.class)
-//    @GetMapping(params = "projection=name-only")
-//    public List<RestaurantModel> listNameOnly() {
-//        return list();
-//    }
+    @JsonView(RestaurantView.NameOnly.class)
+    @GetMapping(params = "projection=name-only")
+    public List<RestaurantModel> listNameOnly() {
+        return list();
+    }
 
     @GetMapping("/{id}")
     public RestaurantModel findById(@PathVariable Long id) {
