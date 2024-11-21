@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 @RequestMapping(value = "/restaurants")
 public class RestaurantController {
@@ -132,7 +132,7 @@ public class RestaurantController {
         restaurantRegisterService.activate(id);
     }
 
-    @DeleteMapping("/{id}/active")
+    @DeleteMapping("/{id}/deactivate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivate(@PathVariable Long id) {
         restaurantRegisterService.deactivate(id);
@@ -148,7 +148,7 @@ public class RestaurantController {
         }
     }
 
-    @DeleteMapping("/activations")
+    @DeleteMapping("/deactivations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateList(@RequestBody List<Long> listIds) {
         try {
