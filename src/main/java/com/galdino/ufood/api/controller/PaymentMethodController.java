@@ -6,11 +6,14 @@ import com.galdino.ufood.api.model.PaymentMethodModel;
 import com.galdino.ufood.domain.model.PaymentMethod;
 import com.galdino.ufood.domain.repository.PaymentMethodRepository;
 import com.galdino.ufood.domain.service.PaymentMethodRegisterService;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/payment-methods")
@@ -29,8 +32,11 @@ public class PaymentMethodController {
     }
 
     @GetMapping
-    public List<PaymentMethodModel> list() {
-        return genericAssembler.toCollection(paymentMethodRepository.findAll(), PaymentMethodModel.class);
+    public ResponseEntity<List<PaymentMethodModel>> list() {
+        List<PaymentMethodModel> paymentMethodModels = genericAssembler.toCollection(paymentMethodRepository.findAll(), PaymentMethodModel.class);
+        return ResponseEntity.ok()
+                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                             .body(paymentMethodModels);
     }
 
     @GetMapping("/{id}")
