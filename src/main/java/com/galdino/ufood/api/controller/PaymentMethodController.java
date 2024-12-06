@@ -40,9 +40,13 @@ public class PaymentMethodController {
     }
 
     @GetMapping("/{id}")
-    public PaymentMethodModel findById(@PathVariable Long id) {
+    public ResponseEntity<PaymentMethodModel> findById(@PathVariable Long id) {
         PaymentMethod paymentMethod = paymentMethodRegisterService.findOrThrow(id);
-        return genericAssembler.toClass(paymentMethod, PaymentMethodModel.class);
+        PaymentMethodModel paymentMethodModel = genericAssembler.toClass(paymentMethod, PaymentMethodModel.class);
+
+        return ResponseEntity.ok()
+                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                             .body(paymentMethodModel);
     }
 
     @PostMapping
