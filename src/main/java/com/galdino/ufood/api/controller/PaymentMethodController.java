@@ -35,7 +35,11 @@ public class PaymentMethodController {
     public ResponseEntity<List<PaymentMethodModel>> list() {
         List<PaymentMethodModel> paymentMethodModels = genericAssembler.toCollection(paymentMethodRepository.findAll(), PaymentMethodModel.class);
         return ResponseEntity.ok()
-                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+//                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+//                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+//                             .cacheControl(CacheControl.noCache())
+//                             .cacheControl(CacheControl.noStore())
                              .body(paymentMethodModels);
     }
 
