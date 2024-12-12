@@ -46,9 +46,9 @@ insert into restaurant (name, delivery_fee, kitchen_id, address_city_id, address
 insert into restaurant (name, delivery_fee, kitchen_id, update_date, register_date, active, open) values ('Thai Express', 9.50, 1, utc_timestamp, utc_timestamp, 1, 1);
 insert into restaurant (name, delivery_fee, kitchen_id, update_date, register_date, active, open) values ('Tuk Tuk Indian Food', 15, 2, utc_timestamp, utc_timestamp, 1, 1);
 
-insert into payment_method (id, description) values (1, 'Credit Card');
-insert into payment_method (id, description) values (2, 'Debit Card');
-insert into payment_method (id, description) values (3, 'Cash');
+insert into payment_method (id, description, update_date) values (1, 'Credit Card', utc_timestamp);
+insert into payment_method (id, description, update_date) values (2, 'Debit Card', utc_timestamp);
+insert into payment_method (id, description, update_date) values (3, 'Cash', utc_timestamp);
 
 insert into ugroup (id, name) values (1, 'Manager');
 insert into ugroup (id, name) values (2, 'Chef');

@@ -10,8 +10,11 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -32,14 +35,29 @@ public class PaymentMethodController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PaymentMethodModel>> list() {
+    public ResponseEntity<List<PaymentMethodModel>> list(ServletWebRequest request) {
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        String eTag = "0";
+
+        OffsetDateTime maxUpdateDate = paymentMethodRepository.getMaxUpdateDate();
+
+        if (maxUpdateDate != null) {
+            eTag = String.valueOf(maxUpdateDate.toEpochSecond());
+        }
+
+        if (request.checkNotModified(eTag)) {
+            return null;
+        }
+
         List<PaymentMethodModel> paymentMethodModels = genericAssembler.toCollection(paymentMethodRepository.findAll(), PaymentMethodModel.class);
         return ResponseEntity.ok()
 //                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
 //                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
-                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
 //                             .cacheControl(CacheControl.noCache())
 //                             .cacheControl(CacheControl.noStore())
+                             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+                             .eTag(eTag)
                              .body(paymentMethodModels);
     }
 
