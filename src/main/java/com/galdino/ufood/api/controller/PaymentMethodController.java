@@ -3,6 +3,7 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.PaymentMethodInput;
 import com.galdino.ufood.api.model.PaymentMethodModel;
+import com.galdino.ufood.domain.exception.PaymentMethodNotFoundException;
 import com.galdino.ufood.domain.model.PaymentMethod;
 import com.galdino.ufood.domain.repository.PaymentMethodRepository;
 import com.galdino.ufood.domain.service.PaymentMethodRegisterService;
@@ -62,12 +63,29 @@ public class PaymentMethodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentMethodModel> findById(@PathVariable Long id) {
+    public ResponseEntity<PaymentMethodModel> findById(@PathVariable Long id, ServletWebRequest request) {
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        String eTag;
+
+        OffsetDateTime updateDateById = paymentMethodRepository.getUpdateDateById(id);
+
+        if (updateDateById != null) {
+            eTag = String.valueOf(updateDateById.toEpochSecond());
+        } else {
+            throw new PaymentMethodNotFoundException(id);
+        }
+
+        if (request.checkNotModified(eTag)) {
+            return null;
+        }
+
         PaymentMethod paymentMethod = paymentMethodRegisterService.findOrThrow(id);
         PaymentMethodModel paymentMethodModel = genericAssembler.toClass(paymentMethod, PaymentMethodModel.class);
 
         return ResponseEntity.ok()
                              .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                             .eTag(eTag)
                              .body(paymentMethodModel);
     }
 
