@@ -9,6 +9,8 @@ import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,20 +33,25 @@ public class CityController {
         this.genericAssembler = genericAssembler;
     }
 
+    @ApiOperation("List all cities")
     @GetMapping
     public List<CityModel> list() {
         return  genericAssembler.toCollection(cityRepository.findAll(), CityModel.class);
     }
 
+    @ApiOperation("Find city by id")
     @GetMapping("/{id}")
-    public CityModel findById(@PathVariable Long id) {
+    public CityModel findById(@ApiParam(value = "City id", example = "1")
+                              @PathVariable Long id) {
         City city = cityRegisterService.findOrThrow(id);
         return genericAssembler.toClass(city, CityModel.class);
     }
 
+    @ApiOperation("Create city")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CityModel add(@RequestBody @Valid CityInput cityInput) {
+    public CityModel add(@ApiParam(name = "body", value = "New city representation")
+                         @RequestBody @Valid CityInput cityInput) {
         try {
             City city = genericAssembler.toClass(cityInput, City.class);
             city = cityRegisterService.add(city);
@@ -54,8 +61,13 @@ public class CityController {
         }
     }
 
+    @ApiOperation("Update city by id")
     @PutMapping("/{id}")
-    public CityModel update(@PathVariable Long id, @RequestBody @Valid CityInput cityInput) {
+    public CityModel update(@ApiParam(value = "City id", example = "1")
+                            @PathVariable Long id,
+
+                            @ApiParam(name = "body", value = "New city representation with new data")
+                            @RequestBody @Valid CityInput cityInput) {
         try {
             City cityAux = cityRegisterService.findOrThrow(id);
 
@@ -69,9 +81,11 @@ public class CityController {
         }
     }
 
+    @ApiOperation("Remove city by id")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remove(@PathVariable Long id) {
+    public void remove(@ApiParam(value = "City id", example = "1")
+                       @PathVariable Long id) {
         cityRegisterService.remove(id);
     }
 
