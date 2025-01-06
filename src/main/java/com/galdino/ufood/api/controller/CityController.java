@@ -8,12 +8,14 @@ import com.galdino.ufood.domain.exception.StateNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Api(tags = "Cities")
 @RestController
 @RequestMapping("/cities")
 public class CityController {
