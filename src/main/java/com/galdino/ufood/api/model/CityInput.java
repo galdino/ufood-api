@@ -1,5 +1,6 @@
 package com.galdino.ufood.api.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CityInput {
 
+    @ApiModelProperty(example = "Los Angeles", required = true)
     @NotBlank
     private String name;
 
