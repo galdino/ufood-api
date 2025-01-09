@@ -34,20 +34,73 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                                                         .build()
                                                       .useDefaultResponseMessages(false)
                                                       .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
+                                                      .globalResponseMessage(RequestMethod.POST, globalPostResponseMessages())
+                                                      .globalResponseMessage(RequestMethod.PUT, globalPutResponseMessages())
+                                                      .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                                                       .apiInfo(apiInfo())
                                                       .tags(new Tag("Cities", "Operations about cities"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
-        return List.of(new ResponseMessageBuilder()
-                           .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                           .message("Internal Server Error")
-                           .build(),
-                       new ResponseMessageBuilder()
-                           .code(HttpStatus.NOT_ACCEPTABLE.value())
-                           .message("Consumer representation not acceptable")
-                           .build()
-                      );
+        return List.of(getInternalServerErrorResponseMessage(),
+                       getNotAcceptableResponseMessage(),
+                       getNotFoundResponseMessage());
+    }
+
+    private List<ResponseMessage> globalPostResponseMessages() {
+        return List.of(getInternalServerErrorResponseMessage(),
+                       getNotAcceptableResponseMessage(),
+                       getBadRequestResponseMessage(),
+                       getUnsupportedMediaTypeResponseMessage());
+    }
+
+    private List<ResponseMessage> globalPutResponseMessages() {
+        return List.of(getInternalServerErrorResponseMessage(),
+                       getNotAcceptableResponseMessage(),
+                       getBadRequestResponseMessage(),
+                       getNotFoundResponseMessage(),
+                       getUnsupportedMediaTypeResponseMessage());
+    }
+
+    private List<ResponseMessage> globalDeleteResponseMessages() {
+        return List.of(getInternalServerErrorResponseMessage(),
+                       getNotAcceptableResponseMessage(),
+                       getNotFoundResponseMessage());
+    }
+
+    private ResponseMessage getInternalServerErrorResponseMessage() {
+        return new ResponseMessageBuilder()
+                   .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                   .message("Internal Server Error")
+                   .build();
+    }
+
+    private ResponseMessage getNotAcceptableResponseMessage() {
+        return new ResponseMessageBuilder()
+                   .code(HttpStatus.NOT_ACCEPTABLE.value())
+                   .message("Consumer representation not acceptable")
+                   .build();
+    }
+
+    private ResponseMessage getNotFoundResponseMessage() {
+        return new ResponseMessageBuilder()
+                   .code(HttpStatus.NOT_FOUND.value())
+                   .message("Resource not found")
+                   .build();
+    }
+
+    private ResponseMessage getBadRequestResponseMessage() {
+        return new ResponseMessageBuilder()
+                   .code(HttpStatus.BAD_REQUEST.value())
+                   .message("One or more fields are invalid")
+                   .build();
+    }
+
+    private ResponseMessage getUnsupportedMediaTypeResponseMessage() {
+        return new ResponseMessageBuilder()
+                   .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+                   .message("Request body with unsupported type")
+                   .build();
     }
 
     private ApiInfo apiInfo() {
