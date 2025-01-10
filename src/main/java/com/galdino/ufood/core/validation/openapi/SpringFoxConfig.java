@@ -13,6 +13,7 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.ResponseMessage;
@@ -74,37 +75,37 @@ public class SpringFoxConfig implements WebMvcConfigurer {
     }
 
     private ResponseMessage getInternalServerErrorResponseMessage() {
-        return new ResponseMessageBuilder()
-                   .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                   .message("Internal Server Error")
-                   .build();
+        return getNewResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error");
     }
 
     private ResponseMessage getNotAcceptableResponseMessage() {
         return new ResponseMessageBuilder()
-                   .code(HttpStatus.NOT_ACCEPTABLE.value())
-                   .message("Consumer representation not acceptable")
-                   .build();
+                .code(HttpStatus.NOT_ACCEPTABLE.value())
+                .message("Consumer representation not acceptable")
+                .build();
     }
 
     private ResponseMessage getNotFoundResponseMessage() {
-        return new ResponseMessageBuilder()
-                   .code(HttpStatus.NOT_FOUND.value())
-                   .message("Resource not found")
-                   .build();
+        return getNewResponseMessage(HttpStatus.NOT_FOUND.value(), "Resource not found");
     }
 
     private ResponseMessage getBadRequestResponseMessage() {
+        return getNewResponseMessage(HttpStatus.BAD_REQUEST.value(), "One or more fields are invalid");
+    }
+
+    private static ResponseMessage getNewResponseMessage(int code, String message) {
         return new ResponseMessageBuilder()
-                   .code(HttpStatus.BAD_REQUEST.value())
-                   .message("One or more fields are invalid")
-                   .build();
+                .code(code)
+                .message(message)
+                .responseModel(new ModelRef("Problem"))
+                .build();
     }
 
     private ResponseMessage getUnsupportedMediaTypeResponseMessage() {
         return new ResponseMessageBuilder()
                    .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
                    .message("Request body with unsupported type")
+                   .responseModel(new ModelRef("Problem"))
                    .build();
     }
 

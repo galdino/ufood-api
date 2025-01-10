@@ -9,6 +9,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ApiModel("Problem")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Builder
