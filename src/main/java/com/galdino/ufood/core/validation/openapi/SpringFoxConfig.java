@@ -1,5 +1,7 @@
 package com.galdino.ufood.core.validation.openapi;
 
+import com.fasterxml.classmate.TypeResolver;
+import com.galdino.ufood.api.exceptionhandler.Problem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -28,6 +30,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
+        TypeResolver typeResolver = new TypeResolver();
+
         return new Docket(DocumentationType.SWAGGER_2).select()
                                                         .apis(RequestHandlerSelectors.basePackage("com.galdino.ufood.api"))
 //                                                      .paths(PathSelectors.ant("/restaurants/*"))
@@ -37,6 +41,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                                                       .globalResponseMessage(RequestMethod.POST, globalPostResponseMessages())
                                                       .globalResponseMessage(RequestMethod.PUT, globalPutResponseMessages())
                                                       .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+                                                      .additionalModels(typeResolver.resolve(Problem.class))
                                                       .apiInfo(apiInfo())
                                                       .tags(new Tag("Cities", "Operations about cities"));
     }
