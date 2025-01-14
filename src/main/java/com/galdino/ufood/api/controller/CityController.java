@@ -1,6 +1,7 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.assembler.GenericAssembler;
+import com.galdino.ufood.api.exceptionhandler.Problem;
 import com.galdino.ufood.api.model.CityInput;
 import com.galdino.ufood.api.model.CityModel;
 import com.galdino.ufood.domain.exception.BusinessException;
@@ -8,9 +9,7 @@ import com.galdino.ufood.domain.exception.StateNotFoundException;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +39,10 @@ public class CityController {
     }
 
     @ApiOperation("Find city by id")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Invalid Parameter", response = Problem.class),
+            @ApiResponse(code = 404, message = "City not found", response = Problem.class)
+    })
     @GetMapping("/{id}")
     public CityModel findById(@ApiParam(value = "City id", example = "1")
                               @PathVariable Long id) {
@@ -48,6 +51,9 @@ public class CityController {
     }
 
     @ApiOperation("Create city")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "City created")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CityModel add(@ApiParam(name = "body", value = "New city representation")
@@ -62,6 +68,10 @@ public class CityController {
     }
 
     @ApiOperation("Update city by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "City updated"),
+            @ApiResponse(code = 404, message = "City not found", response = Problem.class)
+    })
     @PutMapping("/{id}")
     public CityModel update(@ApiParam(value = "City id", example = "1")
                             @PathVariable Long id,
@@ -82,6 +92,10 @@ public class CityController {
     }
 
     @ApiOperation("Remove city by id")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "City removed"),
+            @ApiResponse(code = 404, message = "City not found", response = Problem.class)
+    })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@ApiParam(value = "City id", example = "1")
