@@ -8,13 +8,14 @@ import com.galdino.ufood.domain.model.UGroup;
 import com.galdino.ufood.domain.repository.UGroupRepository;
 import com.galdino.ufood.domain.service.UGroupRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ugroups")
+@RequestMapping(path = "/ugroups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UGroupController implements UGroupControllerOpenApi {
 
     private UGroupRepository uGroupRepository;
