@@ -1,6 +1,7 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.assembler.GenericAssembler;
+import com.galdino.ufood.api.controller.openapi.UGroupControllerOpenApi;
 import com.galdino.ufood.api.model.UGroupInput;
 import com.galdino.ufood.api.model.UGroupModel;
 import com.galdino.ufood.domain.model.UGroup;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ugroups")
-public class UGroupController {
+public class UGroupController implements UGroupControllerOpenApi {
 
     private UGroupRepository uGroupRepository;
     private UGroupRegisterService uGroupRegisterService;

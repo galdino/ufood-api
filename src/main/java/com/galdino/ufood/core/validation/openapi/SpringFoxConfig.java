@@ -44,7 +44,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                                                       .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                                                       .additionalModels(typeResolver.resolve(Problem.class))
                                                       .apiInfo(apiInfo())
-                                                      .tags(new Tag("Cities", "Operations about cities"));
+                                                      .tags(new Tag("Cities", "Operations about cities"),
+                                                            new Tag("UGroup", "Operations about ugroups"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
