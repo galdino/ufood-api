@@ -1,4 +1,4 @@
-package com.galdino.ufood.api.controller.openapi;
+package com.galdino.ufood.api.openapi.controller;
 
 import com.galdino.ufood.api.exceptionhandler.Problem;
 import com.galdino.ufood.api.model.CityInput;

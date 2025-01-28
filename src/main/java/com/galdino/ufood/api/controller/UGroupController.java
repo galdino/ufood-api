@@ -1,9 +1,9 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.assembler.GenericAssembler;
-import com.galdino.ufood.api.controller.openapi.UGroupControllerOpenApi;
 import com.galdino.ufood.api.model.UGroupInput;
 import com.galdino.ufood.api.model.UGroupModel;
+import com.galdino.ufood.api.openapi.controller.UGroupControllerOpenApi;
 import com.galdino.ufood.domain.model.UGroup;
 import com.galdino.ufood.domain.repository.UGroupRepository;
 import com.galdino.ufood.domain.service.UGroupRegisterService;

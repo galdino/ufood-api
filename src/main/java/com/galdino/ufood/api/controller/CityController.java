@@ -1,9 +1,9 @@
 package com.galdino.ufood.api.controller;
 
 import com.galdino.ufood.api.assembler.GenericAssembler;
-import com.galdino.ufood.api.controller.openapi.CityControllerOpenApi;
 import com.galdino.ufood.api.model.CityInput;
 import com.galdino.ufood.api.model.CityModel;
+import com.galdino.ufood.api.openapi.controller.CityControllerOpenApi;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.StateNotFoundException;
 import com.galdino.ufood.domain.model.City;
