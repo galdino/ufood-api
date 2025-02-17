@@ -4,6 +4,7 @@ import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.KitchenInput;
 import com.galdino.ufood.api.model.KitchenModel;
 import com.galdino.ufood.api.model.KitchensXmlWrapper;
+import com.galdino.ufood.api.openapi.controller.KitchenControllerOpenApi;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.service.KitchenRegisterService;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/kitchens")
-public class KitchenController {
+public class KitchenController implements KitchenControllerOpenApi {
 
     private KitchenRepository kitchenRepository;
     private KitchenRegisterService kitchenRegisterService;

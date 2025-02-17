@@ -53,7 +53,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                                                       .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, KitchenModel.class), KitchensModelOpenApi.class))
                                                       .apiInfo(apiInfo())
                                                       .tags(new Tag("Cities", "Operations about cities"),
-                                                            new Tag("UGroup", "Operations about ugroups"));
+                                                            new Tag("UGroup", "Operations about ugroups"),
+                                                            new Tag("Kitchens", "Operations about kitchens"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
