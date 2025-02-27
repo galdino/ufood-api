@@ -3,6 +3,7 @@ package com.galdino.ufood.api.controller;
 import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.PaymentMethodInput;
 import com.galdino.ufood.api.model.PaymentMethodModel;
+import com.galdino.ufood.api.openapi.controller.PaymentMethodControllerOpenApi;
 import com.galdino.ufood.domain.exception.PaymentMethodNotFoundException;
 import com.galdino.ufood.domain.model.PaymentMethod;
 import com.galdino.ufood.domain.repository.PaymentMethodRepository;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/payment-methods")
-public class PaymentMethodController {
+public class PaymentMethodController implements PaymentMethodControllerOpenApi {
 
     private PaymentMethodRepository paymentMethodRepository;
     private PaymentMethodRegisterService paymentMethodRegisterService;
