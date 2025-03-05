@@ -12,6 +12,8 @@ import com.galdino.ufood.domain.repository.UOrderRepository;
 import com.galdino.ufood.domain.service.UOrderRegisterService;
 import com.galdino.ufood.infrastructure.repository.spec.UOrderSpecs;
 import com.google.common.collect.ImmutableMap;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +57,10 @@ public class UOrderController {
 //        return uOrderSummaryModelWrapper;
 //    }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Fields names for filtering in the response, separated by commas", name = "fields",
+                              paramType = "query", type = "string")
+    })
     @GetMapping
     public Page<UOrderSummaryModel> search(UOrderFilter filter, @PageableDefault(size = 1) Pageable pageable) {
         pageableTranslator(pageable);
@@ -75,6 +81,10 @@ public class UOrderController {
         PageableTranslator.translate(pageable, map);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Fields names for filtering in the response, separated by commas", name = "fields",
+                              paramType = "query", type = "string")
+    })
     @GetMapping("/{code}")
     public UOrderModel findByCode(@PathVariable String code) {
         UOrder uOrder = uOrderRegisterService.findOrThrow(code);
