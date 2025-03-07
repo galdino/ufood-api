@@ -4,6 +4,7 @@ import com.galdino.ufood.api.assembler.GenericAssembler;
 import com.galdino.ufood.api.model.UOrderInput;
 import com.galdino.ufood.api.model.UOrderModel;
 import com.galdino.ufood.api.model.UOrderSummaryModel;
+import com.galdino.ufood.api.openapi.controller.UOrderControllerOpenApi;
 import com.galdino.ufood.core.validation.data.PageableTranslator;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.filter.UOrderFilter;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/uorders")
-public class UOrderController {
+public class UOrderController implements UOrderControllerOpenApi {
 
     private final UOrderRegisterService uOrderRegisterService;
 

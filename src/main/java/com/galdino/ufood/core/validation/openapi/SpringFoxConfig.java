@@ -65,7 +65,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                                                       .tags(new Tag("Cities", "Operations about cities"),
                                                             new Tag("UGroup", "Operations about ugroups"),
                                                             new Tag("Kitchens", "Operations about kitchens"),
-                                                            new Tag("Payment Method", "Operations about payment method"));
+                                                            new Tag("Payment Method", "Operations about payment method"),
+                                                            new Tag("UOrder", "Operations about uorders"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
