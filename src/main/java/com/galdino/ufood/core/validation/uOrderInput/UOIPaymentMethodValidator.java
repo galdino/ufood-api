@@ -1,6 +1,6 @@
 package com.galdino.ufood.core.validation.uOrderInput;
 
-import com.galdino.ufood.api.model.UOrderInput;
+import com.galdino.ufood.api.v1.model.UOrderInput;
 import com.galdino.ufood.domain.exception.PaymentMethodNotFoundException;
 import com.galdino.ufood.domain.model.PaymentMethod;
 

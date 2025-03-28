@@ -2,9 +2,9 @@ package com.galdino.ufood.core.validation.openapi;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.galdino.ufood.api.exceptionhandler.Problem;
-import com.galdino.ufood.api.model.KitchenModel;
-import com.galdino.ufood.api.openapi.model.KitchensModelOpenApi;
-import com.galdino.ufood.api.openapi.model.PageableModelOpenApi;
+import com.galdino.ufood.api.v1.model.KitchenModel;
+import com.galdino.ufood.api.v1.openapi.model.KitchensModelOpenApi;
+import com.galdino.ufood.api.v1.openapi.model.PageableModelOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

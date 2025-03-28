@@ -1,9 +1,9 @@
 package com.galdino.ufood.core.validation.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.galdino.ufood.api.model.mixin.CityMixin;
-import com.galdino.ufood.api.model.mixin.KitchenMixin;
-import com.galdino.ufood.api.model.mixin.RestaurantMixin;
+import com.galdino.ufood.api.v1.model.mixin.CityMixin;
+import com.galdino.ufood.api.v1.model.mixin.KitchenMixin;
+import com.galdino.ufood.api.v1.model.mixin.RestaurantMixin;
 import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.model.Restaurant;

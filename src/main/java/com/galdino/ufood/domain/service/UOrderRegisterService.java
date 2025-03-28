@@ -1,8 +1,8 @@
 package com.galdino.ufood.domain.service;
 
-import com.galdino.ufood.api.assembler.GenericAssembler;
-import com.galdino.ufood.api.model.UOrderInput;
-import com.galdino.ufood.api.model.UOrderItemInput;
+import com.galdino.ufood.api.v1.assembler.GenericAssembler;
+import com.galdino.ufood.api.v1.model.UOrderInput;
+import com.galdino.ufood.api.v1.model.UOrderItemInput;
 import com.galdino.ufood.core.validation.uOrderInput.*;
 import com.galdino.ufood.domain.exception.UOrderNotFoundException;
 import com.galdino.ufood.domain.model.*;
