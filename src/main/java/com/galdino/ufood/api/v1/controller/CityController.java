@@ -10,13 +10,14 @@ import com.galdino.ufood.domain.model.City;
 import com.galdino.ufood.domain.repository.CityRepository;
 import com.galdino.ufood.domain.service.CityRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/cities", produces = "application/vnd.ufood.v1+json")
+@RequestMapping(path = "/v1/cities", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CityController implements CityControllerOpenApi {
 
     private CityRepository cityRepository;
