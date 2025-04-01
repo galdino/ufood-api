@@ -7,13 +7,14 @@ import com.galdino.ufood.domain.model.State;
 import com.galdino.ufood.domain.repository.StateRepository;
 import com.galdino.ufood.domain.service.StateRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/states")
+@RequestMapping(path = "/v1/states", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StateController {
 
     private StateRepository stateRepository;

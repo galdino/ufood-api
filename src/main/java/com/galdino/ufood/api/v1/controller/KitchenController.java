@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/kitchens")
+@RequestMapping(path = "/v1/kitchens")
 public class KitchenController implements KitchenControllerOpenApi {
 
     private KitchenRepository kitchenRepository;

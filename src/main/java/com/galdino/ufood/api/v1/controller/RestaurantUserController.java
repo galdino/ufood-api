@@ -5,12 +5,13 @@ import com.galdino.ufood.api.v1.model.UserModel;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurants/{rId}/admins")
+@RequestMapping(path = "/v1/restaurants/{rId}/admins", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantUserController {
 
     private final RestaurantRegisterService restaurantRegisterService;

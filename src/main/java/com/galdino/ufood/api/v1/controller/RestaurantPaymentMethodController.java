@@ -5,12 +5,13 @@ import com.galdino.ufood.api.v1.model.PaymentMethodModel;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurants/{rId}/payment-methods")
+@RequestMapping(path = "/v1/restaurants/{rId}/payment-methods", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantPaymentMethodController {
 
     private final RestaurantRegisterService restaurantRegisterService;

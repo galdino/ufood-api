@@ -2,10 +2,11 @@ package com.galdino.ufood.api.v1.controller;
 
 import com.galdino.ufood.domain.service.FlowUOrderService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/uorders/{code}")
+@RequestMapping(path = "/v1/uorders/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FlowUOrderController {
 
     private final FlowUOrderService flowUOrderService;

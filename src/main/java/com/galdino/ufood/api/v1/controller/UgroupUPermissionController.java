@@ -5,12 +5,13 @@ import com.galdino.ufood.api.v1.model.UPermissionModel;
 import com.galdino.ufood.domain.model.UGroup;
 import com.galdino.ufood.domain.service.UGroupRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/ugroups/{gId}/upermissons")
+@RequestMapping(path = "/v1/ugroups/{gId}/upermissons", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UgroupUPermissionController {
 
     private final UGroupRegisterService ugroupRegisterService;

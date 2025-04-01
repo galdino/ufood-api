@@ -8,6 +8,7 @@ import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.service.ProductRegisterService;
 import com.galdino.ufood.domain.service.RestaurantRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/restaurants/{rId}/products")
+@RequestMapping(path = "/v1/restaurants/{rId}/products", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantProductController {
 
     private final RestaurantRegisterService restaurantRegisterService;

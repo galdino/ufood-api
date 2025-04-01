@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/ugroups", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/ugroups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UGroupController implements UGroupControllerOpenApi {
 
     private UGroupRepository uGroupRepository;

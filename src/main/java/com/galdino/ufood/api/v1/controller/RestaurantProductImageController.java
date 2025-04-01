@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/restaurants/{rId}/products/{pId}/image")
+@RequestMapping(path = "/v1/restaurants/{rId}/products/{pId}/image")
 public class RestaurantProductImageController {
 
     private final ProductRegisterService productRegisterService;

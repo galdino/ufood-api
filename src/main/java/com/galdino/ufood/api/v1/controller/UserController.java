@@ -9,13 +9,14 @@ import com.galdino.ufood.domain.model.User;
 import com.galdino.ufood.domain.repository.UserRepository;
 import com.galdino.ufood.domain.service.UserRegisterService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(path = "/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserRepository userRepository;

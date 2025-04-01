@@ -10,6 +10,7 @@ import com.galdino.ufood.domain.repository.PaymentMethodRepository;
 import com.galdino.ufood.domain.service.PaymentMethodRegisterService;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/payment-methods")
+@RequestMapping(path = "/v1/payment-methods", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PaymentMethodController implements PaymentMethodControllerOpenApi {
 
     private PaymentMethodRepository paymentMethodRepository;
