@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -37,12 +38,12 @@ import java.util.List;
 public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
-    public Docket apiDocket() {
+    public Docket apiDocketV1() {
         TypeResolver typeResolver = new TypeResolver();
 
-        return new Docket(DocumentationType.SWAGGER_2).select()
+        return new Docket(DocumentationType.SWAGGER_2).groupName("V1").select()
                                                         .apis(RequestHandlerSelectors.basePackage("com.galdino.ufood.api"))
-//                                                      .paths(PathSelectors.ant("/restaurants/*"))
+                                                        .paths(PathSelectors.ant("/v1/**"))
                                                         .build()
                                                       .useDefaultResponseMessages(false)
                                                       .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
@@ -61,12 +62,39 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                                                       .ignoredParameterTypes(ServletWebRequest.class)
                                                       .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                                                       .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, KitchenModel.class), KitchensModelOpenApi.class))
-                                                      .apiInfo(apiInfo())
+                                                      .apiInfo(apiInfoV1())
                                                       .tags(new Tag("Cities", "Operations about cities"),
                                                             new Tag("UGroup", "Operations about ugroups"),
                                                             new Tag("Kitchens", "Operations about kitchens"),
                                                             new Tag("Payment Method", "Operations about payment method"),
                                                             new Tag("UOrder", "Operations about uorders"));
+    }
+
+    @Bean
+    public Docket apiDocketV2() {
+        TypeResolver typeResolver = new TypeResolver();
+
+        return new Docket(DocumentationType.SWAGGER_2).groupName("V2").select()
+                .apis(RequestHandlerSelectors.basePackage("com.galdino.ufood.api"))
+                .paths(PathSelectors.ant("/v2/**"))
+                .build()
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
+                .globalResponseMessage(RequestMethod.POST, globalPostResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPutResponseMessages())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+//                                                      .globalOperationParameters(Arrays.asList(
+//                                                              new ParameterBuilder()
+//                                                                      .name("fields")
+//                                                                      .description("Fields names for filtering in the response, separated by commas")
+//                                                                      .parameterType("query")
+//                                                                      .modelRef(new ModelRef("string"))
+//                                                                      .build()
+//                                                      ))
+                .additionalModels(typeResolver.resolve(Problem.class))
+                .ignoredParameterTypes(ServletWebRequest.class)
+                .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+                .apiInfo(apiInfoV2());
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
@@ -131,10 +159,18 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                    .build();
     }
 
-    private ApiInfo apiInfo() {
+    private ApiInfo apiInfoV1() {
         return new ApiInfoBuilder().title("Ufood API")
                                    .description("Public API for customers and restaurants")
                                    .version("1.0")
+                                   .contact(new Contact("Ufood", "https://www.ufood.com", "info@ufood.com"))
+                                   .build();
+    }
+
+    private ApiInfo apiInfoV2() {
+        return new ApiInfoBuilder().title("Ufood API")
+                                   .description("Public API for customers and restaurants")
+                                   .version("2.0")
                                    .contact(new Contact("Ufood", "https://www.ufood.com", "info@ufood.com"))
                                    .build();
     }
