@@ -31,6 +31,7 @@ public class CityController implements CityControllerOpenApi {
         this.genericAssembler = genericAssembler;
     }
 
+    @Deprecated
     @GetMapping
     public List<CityModel> list() {
         return  genericAssembler.toCollection(cityRepository.findAll(), CityModel.class);

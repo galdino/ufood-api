@@ -160,8 +160,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
     }
 
     private ApiInfo apiInfoV1() {
-        return new ApiInfoBuilder().title("Ufood API")
-                                   .description("Public API for customers and restaurants")
+        return new ApiInfoBuilder().title("Ufood API (Deprecated)")
+                                   .description("Public API for customers and restaurants <br> <strong> Legacy Version")
                                    .version("1.0")
                                    .contact(new Contact("Ufood", "https://www.ufood.com", "info@ufood.com"))
                                    .build();
