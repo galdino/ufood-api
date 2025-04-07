@@ -14,10 +14,10 @@ import javax.servlet.Filter;
 @Component
 public class WebConfig implements WebMvcConfigurer {
 
-    public final ApiDeprecationHandler apiDeprecationHandler;
+    public final ApiRetirementHandler apiRetirementHandler;
 
-    public WebConfig(ApiDeprecationHandler apiDeprecationHandler) {
-        this.apiDeprecationHandler = apiDeprecationHandler;
+    public WebConfig(ApiRetirementHandler apiRetirementHandler) {
+        this.apiRetirementHandler = apiRetirementHandler;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiDeprecationHandler);
+        registry.addInterceptor(apiRetirementHandler);
     }
 
     @Bean
