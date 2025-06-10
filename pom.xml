@@ -140,8 +140,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.nimbusds</groupId>
-			<artifactId>oauth2-oidc-sdk</artifactId>
-			<version>6.21.2</version>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>8.20</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
