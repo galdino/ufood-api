@@ -37,15 +37,15 @@ public class User {
                inverseJoinColumns = @JoinColumn(name = "ugroup_id"))
     private Set<UGroup> uGroups = new HashSet<>();
 
-    public boolean matchesPassword(String currentPassword) {
-        return this.password.equals(currentPassword);
-    }
-
     public boolean removeUGroup(UGroup uGroup) {
         return this.uGroups.remove(uGroup);
     }
 
     public boolean addUGroup(UGroup uGroup) {
         return this.uGroups.add(uGroup);
+    }
+
+    public boolean isNew() {
+        return getId() == null;
     }
 }

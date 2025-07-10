@@ -6,6 +6,7 @@ import com.galdino.ufood.domain.model.UGroup;
 import com.galdino.ufood.domain.model.User;
 import com.galdino.ufood.domain.repository.UserRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +16,13 @@ import java.util.Optional;
 public class UserRegisterService {
 
     private final UserRepository userRepository;
-
     private final UGroupRegisterService uGroupRegisterService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserRegisterService(UserRepository userRepository, UGroupRegisterService uGroupRegisterService) {
+    public UserRegisterService(UserRepository userRepository, UGroupRegisterService uGroupRegisterService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.uGroupRegisterService = uGroupRegisterService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -32,6 +34,10 @@ public class UserRegisterService {
 
         if (userAux.isPresent() && !userAux.get().equals(user)) {
             throw new BusinessException(String.format("Email %s already registered", user.getEmail()));
+        }
+
+        if (user.isNew()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         return userRepository.save(user);
@@ -55,11 +61,11 @@ public class UserRegisterService {
     public void updatePassword(Long id, String currentPassword, String newPassword) {
         User user = findOrThrow(id);
 
-        if (!user.matchesPassword(currentPassword)) {
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new BusinessException("Current password informed does not match");
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
