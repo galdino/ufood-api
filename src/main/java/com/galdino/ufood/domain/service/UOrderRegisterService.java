@@ -39,11 +39,11 @@ public class UOrderRegisterService {
     }
 
     @Transactional
-    public UOrder add(UOrderInput uOrderInput) {
+    public UOrder add(UOrderInput uOrderInput, Long userId) {
 
         Optional<Restaurant> restaurant = restaurantRepository.findById(uOrderInput.getRestaurant().getId());
         Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findById(uOrderInput.getPaymentMethod().getId());
-        Optional<User> user = userRepository.findById(1L);
+        Optional<User> user = userRepository.findById(userId);
         Optional<City> city = cityRepository.findById(uOrderInput.getAddress().getCity().getId());
 
         validate(uOrderInput, restaurant, paymentMethod, city);

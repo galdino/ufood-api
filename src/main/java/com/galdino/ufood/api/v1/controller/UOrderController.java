@@ -6,6 +6,7 @@ import com.galdino.ufood.api.v1.model.UOrderModel;
 import com.galdino.ufood.api.v1.model.UOrderSummaryModel;
 import com.galdino.ufood.api.v1.openapi.controller.UOrderControllerOpenApi;
 import com.galdino.ufood.core.validation.data.PageableTranslator;
+import com.galdino.ufood.core.validation.security.UfoodSecurity;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.filter.UOrderFilter;
 import com.galdino.ufood.domain.model.UOrder;
@@ -27,7 +28,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/v1/uorders", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v2/uorders", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UOrderController implements UOrderControllerOpenApi {
 
     private final UOrderRegisterService uOrderRegisterService;
@@ -35,11 +36,13 @@ public class UOrderController implements UOrderControllerOpenApi {
     private final GenericAssembler genericAssembler;
 
     private final UOrderRepository uOrderRepository;
+    private final UfoodSecurity ufoodSecurity;
 
-    public UOrderController(UOrderRegisterService uOrderRegisterService, GenericAssembler genericAssembler, UOrderRepository uOrderRepository) {
+    public UOrderController(UOrderRegisterService uOrderRegisterService, GenericAssembler genericAssembler, UOrderRepository uOrderRepository, UfoodSecurity ufoodSecurity) {
         this.uOrderRegisterService = uOrderRegisterService;
         this.genericAssembler = genericAssembler;
         this.uOrderRepository = uOrderRepository;
+        this.ufoodSecurity = ufoodSecurity;
     }
 
 //    @GetMapping
@@ -97,7 +100,7 @@ public class UOrderController implements UOrderControllerOpenApi {
     @ResponseStatus(HttpStatus.CREATED)
     public UOrderModel add(@RequestBody @Valid UOrderInput uOrderInput) {
         try {
-            UOrder uOrder = uOrderRegisterService.add(uOrderInput);
+            UOrder uOrder = uOrderRegisterService.add(uOrderInput, ufoodSecurity.getUserId());
             return genericAssembler.toClass(uOrder, UOrderModel.class);
         } catch (BusinessException e) {
             throw new BusinessException(e.getMessage(), e);
