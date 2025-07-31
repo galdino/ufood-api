@@ -53,6 +53,7 @@ insert into payment_method (id, description, update_date) values (3, 'Cash', utc
 insert into ugroup (id, name) values (1, 'Manager');
 insert into ugroup (id, name) values (2, 'Chef');
 insert into ugroup (id, name) values (3, 'Delivery');
+insert into ugroup (id, name) values (4, 'Recorder');
 
 insert into user (id, name, email, password, register_date) values (1, 'Bob Brown', '9vKb5@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
 insert into user (id, name, email, password, register_date) values (2, 'Maria Green', 'ZLXO3@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
@@ -60,12 +61,41 @@ insert into user (id, name, email, password, register_date) values (3, 'Alex Gre
 
 insert into upermission (id, name, description) values (1, 'CHECK_KITCHEN', 'Permission to check the kitchens');
 insert into upermission (id, name, description) values (2, 'EDIT_KITCHEN', 'Permission to edit kitchens');
+insert into upermission (id, name, description) values (3, 'CHECK_PAYMENT_METHOD', 'Permission to check payment methods');
+insert into upermission (id, name, description) values (4, 'EDIT_PAYMENT_METHOD', 'Permission to edit payment methods');
+insert into upermission (id, name, description) values (5, 'CHECK_CITY', 'Permission to check cities');
+insert into upermission (id, name, description) values (6, 'EDIT_CITY', 'Permission to edit cities');
+insert into upermission (id, name, description) values (7, 'CHECK_STATE', 'Permission to check states');
+insert into upermission (id, name, description) values (8, 'EDIT_STATE', 'Permission to edit states');
+insert into upermission (id, name, description) values (9, 'CHECK_USER', 'Permission to check users');
+insert into upermission (id, name, description) values (10, 'EDIT_USER', 'Permission to edit users');
+insert into upermission (id, name, description) values (11, 'CHECK_RESTAURANT', 'Permission to check restaurants');
+insert into upermission (id, name, description) values (12, 'EDIT_RESTAURANT', 'Permission to edit restaurants');
+insert into upermission (id, name, description) values (13, 'CHECK_PRODUCT', 'Permission to check products');
+insert into upermission (id, name, description) values (14, 'EDIT_PRODUCT', 'Permission to edit products');
+insert into upermission (id, name, description) values (15, 'CHECK_ORDER', 'Permission to check orders');
+insert into upermission (id, name, description) values (16, 'EDIT_ORDER', 'Permission to edit orders');
+insert into upermission (id, name, description) values (17, 'CHECK_REPORT', 'Permission to check reports');
+
+insert into ugroup_upermission (ugroup_id, upermission_id)
+select 1, id from upermission;
+
+insert into ugroup_upermission (ugroup_id, upermission_id)
+select 2, id from upermission where name like 'CHECK_%';
+
+insert into ugroup_upermission (ugroup_id, upermission_id) values (2, 14);
+
+insert into ugroup_upermission (ugroup_id, upermission_id)
+select 3, id from upermission where name like 'CHECK_%';
+
+insert into ugroup_upermission (ugroup_id, upermission_id)
+select 4, id from upermission where name like '%_RESTAURANT' or name like '%_PRODUCT';
 
 insert into restaurant_payment_method (restaurant_id, payment_method_id) values (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3);
 
-insert into ugroup_upermission (ugroup_id, upermission_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
+-- insert into ugroup_upermission (ugroup_id, upermission_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
-insert into user_ugroup (user_id, ugroup_id) values (1, 1), (1, 2), (2, 2);
+insert into user_ugroup (user_id, ugroup_id) values (1, 1), (1, 2), (2, 2), (3, 1);
 
 insert into restaurant_user (restaurant_id, user_id) values (1, 1), (2, 2), (2, 3), (3, 3);
 
