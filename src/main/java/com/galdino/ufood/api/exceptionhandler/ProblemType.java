@@ -11,7 +11,8 @@ public enum ProblemType {
     BUSINESS_ERROR("Business rule violation", "/business-error"),
     INVALID_PARAMETER("Invalid Parameter", "/invalid-parameter"),
     SYSTEM_ERROR("System error", "/system-error"),
-    INVALID_FIELD("Invalid field", "/invalid-field");
+    INVALID_FIELD("Invalid field", "/invalid-field"),
+    ACCESS_IS_DENIED("Access is denied", "/access-is-denied");
 
     private String title;
     private String uri;
