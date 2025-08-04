@@ -1,7 +1,7 @@
 package com.galdino.ufood.core.validation.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,16 +14,19 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/v2/kitchens/**").hasAuthority("EDIT_KITCHEN")
-                .antMatchers(HttpMethod.PUT, "/v2/kitchens/**").hasAuthority("EDIT_KITCHEN")
-                .antMatchers(HttpMethod.GET, "/v2/kitchens/**").authenticated()
-                .anyRequest().denyAll()
-            .and()
+        http
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "/v2/kitchens/**").hasAuthority("EDIT_KITCHEN")
+//                .antMatchers(HttpMethod.PUT, "/v2/kitchens/**").hasAuthority("EDIT_KITCHEN")
+//                .antMatchers(HttpMethod.GET, "/v2/kitchens/**").authenticated()
+//                .anyRequest().denyAll()
+//            .and()
+                .csrf().disable()
                 .cors()
             .and()
                 .oauth2ResourceServer()
