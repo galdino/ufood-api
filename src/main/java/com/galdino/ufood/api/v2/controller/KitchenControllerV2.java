@@ -4,6 +4,7 @@ import com.galdino.ufood.api.v1.assembler.GenericAssembler;
 import com.galdino.ufood.api.v1.model.KitchensXmlWrapper;
 import com.galdino.ufood.api.v2.model.KitchenInputV2;
 import com.galdino.ufood.api.v2.model.KitchenModelV2;
+import com.galdino.ufood.core.validation.security.CheckSecurity;
 import com.galdino.ufood.domain.model.Kitchen;
 import com.galdino.ufood.domain.repository.KitchenRepository;
 import com.galdino.ufood.domain.service.KitchenRegisterService;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,7 +34,7 @@ public class KitchenControllerV2 {
         this.genericAssembler = genericAssembler;
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Kitchen.CanCheck
     @GetMapping
     public Page<KitchenModelV2> list(@PageableDefault(size = 5) Pageable pageable) {
         List<KitchenModelV2> kitchenModelList = genericAssembler.toCollection(kitchenRepository.findAll(pageable).getContent(), KitchenModelV2.class);
@@ -42,14 +42,14 @@ public class KitchenControllerV2 {
         return new PageImpl<>(kitchenModelList, pageable, kitchenModelList.size());
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Kitchen.CanCheck
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public KitchensXmlWrapper listXml() {
         return new KitchensXmlWrapper(kitchenRepository.findAll());
     }
 
 //    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Kitchen.CanCheck
     @GetMapping(value = "/{id}")
     public KitchenModelV2 findById(@PathVariable Long id) {
         Kitchen kitchen = kitchenRegisterService.findOrThrow(id);
@@ -57,7 +57,7 @@ public class KitchenControllerV2 {
     }
 
 
-    @PreAuthorize("hasAuthority('EDIT_KITCHEN')")
+    @CheckSecurity.Kitchen.CanEdit
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public KitchenModelV2 add(@RequestBody @Valid KitchenInputV2 kitchenInputV2) {
@@ -66,7 +66,7 @@ public class KitchenControllerV2 {
         return genericAssembler.toClass(kitchen, KitchenModelV2.class);
     }
 
-    @PreAuthorize("hasAuthority('EDIT_KITCHEN')")
+    @CheckSecurity.Kitchen.CanEdit
     @PutMapping("/{id}")
     public KitchenModelV2 update(@PathVariable Long id, @RequestBody @Valid KitchenInputV2 kitchenInputV2) {
         Kitchen kitchenAux = kitchenRegisterService.findOrThrow(id);
@@ -80,7 +80,7 @@ public class KitchenControllerV2 {
         return genericAssembler.toClass(kitchenAux, KitchenModelV2.class);
     }
 
-    @PreAuthorize("hasAuthority('EDIT_KITCHEN')")
+    @CheckSecurity.Kitchen.CanEdit
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
