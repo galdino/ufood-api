@@ -12,12 +12,12 @@ public @interface CheckSecurity {
 
     public @interface Kitchen {
 
-        @PreAuthorize("isAuthenticated()")
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
         @Retention(RUNTIME)
         @Target(METHOD)
         public @interface CanCheck {}
 
-        @PreAuthorize("hasAuthority('EDIT_KITCHEN')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_KITCHEN')")
         @Retention(RUNTIME)
         @Target(METHOD)
         public @interface CanEdit {}
