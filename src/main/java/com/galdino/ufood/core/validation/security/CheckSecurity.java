@@ -24,4 +24,23 @@ public @interface CheckSecurity {
 
     }
 
+    public @interface Restaurant {
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_RESTAURANT')")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface CanManageRegister {}
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('EDIT_RESTAURANT') or @ufoodSecurity.manageRestaurants(#id))")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface CanManageOpenClose {}
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface CanCheck {}
+
+    }
+
 }

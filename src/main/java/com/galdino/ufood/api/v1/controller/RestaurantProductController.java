@@ -3,6 +3,7 @@ package com.galdino.ufood.api.v1.controller;
 import com.galdino.ufood.api.v1.assembler.GenericAssembler;
 import com.galdino.ufood.api.v1.model.ProductInput;
 import com.galdino.ufood.api.v1.model.ProductModel;
+import com.galdino.ufood.core.validation.security.CheckSecurity;
 import com.galdino.ufood.domain.model.Product;
 import com.galdino.ufood.domain.model.Restaurant;
 import com.galdino.ufood.domain.service.ProductRegisterService;
@@ -29,6 +30,7 @@ public class RestaurantProductController {
         this.genericAssembler = genericAssembler;
     }
 
+    @CheckSecurity.Restaurant.CanCheck
     @GetMapping
     public List<ProductModel> list(@PathVariable Long rId,
                                    @RequestParam(required = false) boolean addInactive) {
@@ -46,6 +48,7 @@ public class RestaurantProductController {
         return genericAssembler.toCollection(products, ProductModel.class);
     }
 
+    @CheckSecurity.Restaurant.CanCheck
     @GetMapping("/{pId}")
     public ProductModel restaurantProduct(@PathVariable Long rId, @PathVariable Long pId) {
         Restaurant restaurant = restaurantRegisterService.findOrThrow(rId);
@@ -56,6 +59,7 @@ public class RestaurantProductController {
         return genericAssembler.toClass(productAux, ProductModel.class);
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductModel add(@PathVariable Long rId, @RequestBody @Valid ProductInput productInput) {
@@ -66,6 +70,7 @@ public class RestaurantProductController {
         return genericAssembler.toClass(productAux, ProductModel.class);
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @PutMapping("/{pId}")
     public ProductModel update(@PathVariable Long rId, @PathVariable Long pId, @RequestBody @Valid ProductInput productInput) {
         Restaurant restaurant = restaurantRegisterService.findOrThrow(rId);

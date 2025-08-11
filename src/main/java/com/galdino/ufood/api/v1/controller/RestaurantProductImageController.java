@@ -3,6 +3,7 @@ package com.galdino.ufood.api.v1.controller;
 import com.galdino.ufood.api.v1.assembler.GenericAssembler;
 import com.galdino.ufood.api.v1.model.ProductImageInput;
 import com.galdino.ufood.api.v1.model.ProductImageModel;
+import com.galdino.ufood.core.validation.security.CheckSecurity;
 import com.galdino.ufood.domain.exception.ProductNotFoundException;
 import com.galdino.ufood.domain.model.Product;
 import com.galdino.ufood.domain.model.ProductImage;
@@ -39,6 +40,7 @@ public class RestaurantProductImageController {
         this.genericAssembler = genericAssembler;
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ProductImageModel uploadImage(@PathVariable Long rId, @PathVariable Long pId, @Valid ProductImageInput productImageInput) throws IOException {
         Product product = productRegisterService.findOrThrow(rId, pId);
@@ -56,6 +58,7 @@ public class RestaurantProductImageController {
         return genericAssembler.toClass(productImage, ProductImageModel.class);
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductImageModel findProductImage(@PathVariable Long rId, @PathVariable Long pId) {
         Optional<ProductImage> optionalProductImage = productImageService.getOptionalProductImage(rId, pId);
@@ -70,6 +73,7 @@ public class RestaurantProductImageController {
     }
 
     @GetMapping
+    @CheckSecurity.Restaurant.CanCheck
     public ResponseEntity<?> findImage(@PathVariable Long rId, @PathVariable Long pId,
                                                          @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         List<MediaType> acceptMediaTypes = MediaType.parseMediaTypes(acceptHeader);
@@ -97,6 +101,7 @@ public class RestaurantProductImageController {
 
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProductImage(@PathVariable Long rId, @PathVariable Long pId) {

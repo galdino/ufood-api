@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-mappings
         xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         version="2.2">
 
     <named-query name="Restaurant.findByNameQuery">
@@ -9,6 +8,16 @@
             from Restaurant
             where name like concat('%', :name, '%')
             and kitchen.id = :id
+        </query>
+    </named-query>
+
+    <named-query name="Restaurant.existsUser">
+        <query>
+            select case when count(1) > 0 then true else false end
+            from Restaurant re
+            join re.users us
+            where re.id = :restaurantId
+            and us.id = :userId
         </query>
     </named-query>
 

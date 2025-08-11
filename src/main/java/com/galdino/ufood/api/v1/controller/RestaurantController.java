@@ -9,6 +9,7 @@ import com.galdino.ufood.api.v1.model.RestaurantInput;
 import com.galdino.ufood.api.v1.model.RestaurantModel;
 import com.galdino.ufood.api.v1.model.view.RestaurantView;
 import com.galdino.ufood.core.validation.ValidationException;
+import com.galdino.ufood.core.validation.security.CheckSecurity;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.exception.CityNotFoundException;
 import com.galdino.ufood.domain.exception.KitchenNotFoundException;
@@ -62,6 +63,7 @@ public class RestaurantController {
         return list();
     }
 
+    @CheckSecurity.Restaurant.CanCheck
     @GetMapping("/{id}")
     public RestaurantModel findById(@PathVariable Long id) {
         Restaurant restaurant = restaurantRegisterService.findOrThrow(id);
@@ -69,6 +71,7 @@ public class RestaurantController {
         return genericAssembler.toClass(restaurant, RestaurantModel.class);
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantModel add(@RequestBody @Valid RestaurantInput restaurantInput) {
@@ -83,6 +86,7 @@ public class RestaurantController {
         }
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @PutMapping("/{id}")
     public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
@@ -102,12 +106,14 @@ public class RestaurantController {
         }
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable Long id) {
             restaurantRegisterService.remove(id);
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @PatchMapping("/{id}")
     public RestaurantModel partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
         Restaurant restaurantAux = restaurantRegisterService.findOrThrow(id);
@@ -127,18 +133,21 @@ public class RestaurantController {
         return update(id, restaurantInput);
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @PutMapping("/{id}/active")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activate(@PathVariable Long id) {
         restaurantRegisterService.activate(id);
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @DeleteMapping("/{id}/deactivate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivate(@PathVariable Long id) {
         restaurantRegisterService.deactivate(id);
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @PutMapping("/activations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activateList(@RequestBody List<Long> listIds) {
@@ -149,6 +158,7 @@ public class RestaurantController {
         }
     }
 
+    @CheckSecurity.Restaurant.CanManageRegister
     @DeleteMapping("/deactivations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateList(@RequestBody List<Long> listIds) {
@@ -159,12 +169,14 @@ public class RestaurantController {
         }
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @PutMapping("/{id}/closing")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void closing(@PathVariable Long id) {
         restaurantRegisterService.close(id);
     }
 
+    @CheckSecurity.Restaurant.CanManageOpenClose
     @PutMapping("/{id}/opening")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void opening(@PathVariable Long id) {
