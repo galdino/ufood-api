@@ -6,6 +6,7 @@ import com.galdino.ufood.api.v1.model.UOrderModel;
 import com.galdino.ufood.api.v1.model.UOrderSummaryModel;
 import com.galdino.ufood.api.v1.openapi.controller.UOrderControllerOpenApi;
 import com.galdino.ufood.core.validation.data.PageableTranslator;
+import com.galdino.ufood.core.validation.security.CheckSecurity;
 import com.galdino.ufood.core.validation.security.UfoodSecurity;
 import com.galdino.ufood.domain.exception.BusinessException;
 import com.galdino.ufood.domain.filter.UOrderFilter;
@@ -86,6 +87,7 @@ public class UOrderController implements UOrderControllerOpenApi {
         PageableTranslator.translate(pageable, map);
     }
 
+    @CheckSecurity.UOrder.CanFind
     @ApiImplicitParams({
             @ApiImplicitParam(value = "Fields names for filtering in the response, separated by commas", name = "fields",
                               paramType = "query", type = "string")

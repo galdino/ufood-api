@@ -1,5 +1,6 @@
 package com.galdino.ufood.core.validation.security;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.Retention;
@@ -40,6 +41,16 @@ public @interface CheckSecurity {
         @Retention(RUNTIME)
         @Target(METHOD)
         public @interface CanCheck {}
+
+    }
+
+    public @interface UOrder {
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or @ufoodSecurity.getUserId() == returnObject.user.id or @ufoodSecurity.manageRestaurants(returnObject.restaurant.id)")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface CanFind {}
 
     }
 
