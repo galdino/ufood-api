@@ -16,6 +16,7 @@ delete from user_ugroup;
 delete from uorder;
 delete from uorder_item;
 delete from product_image;
+delete from oauth_client_details;
 
 set foreign_key_checks = 1;
 
@@ -122,4 +123,18 @@ insert into uorder (id, code, partial_amount, delivery_fee, total_amount, regist
                     restaurant_id, address_zip_code, address_street, address_number, address_complement, address_district, address_city_id)
 values (3, 'd178b637-a785-4768-a3cb-bb2dq4r3afcr', 149.45, 10, 159.45, utc_timestamp, 'CREATED', 2, 3, 3, '85400-000', 'Barks Village', '5', 'Reception', 'Village', 1);
 
-insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (4, 1, 149.45, 149.45, 3, 1)
+insert into uorder_item (id, quantity, unit_price, total_price, uorder_id, product_id) values (4, 1, 149.45, 149.45, 3, 1);
+
+insert into oauth_client_details (client_id, resource_ids, client_secret,
+                                  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+                                  access_token_validity, refresh_token_validity, autoapprove)
+values ('ufood-web', null, '$2a$12$lHjAfGcRdUXefakXhb/R1ejBskFK4f4P3jPKoawszLFAz3nj18zZO',
+        'READ,WRITE', 'password', null, null,
+        60 * 60 * 6, 60 * 24 * 60 * 60, null);
+
+insert into oauth_client_details (client_id, resource_ids, client_secret,
+                                  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+                                  access_token_validity, refresh_token_validity, autoapprove)
+values ('ufood-job', null, '$2a$12$tWejGoMBMI.YFLdAL9a5rekaViri5d97LvT0/RzxFKss1RMTzv4cO',
+        'READ,WRITE', 'client_credentials', null, 'CHECK_ORDER,CHECK_REPORT',
+        null, null, null);
