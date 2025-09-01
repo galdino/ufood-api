@@ -28,4 +28,8 @@ public class UfoodSecurity {
         return restaurantRepository.existsUser(restaurantId, getUserId());
     }
 
+    public boolean authenticatedUserIsEqualTo(Long userId) {
+        return getUserId() != null && userId != null && getUserId().equals(userId);
+    }
+
 }

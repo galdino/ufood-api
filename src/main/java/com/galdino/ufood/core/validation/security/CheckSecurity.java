@@ -47,7 +47,7 @@ public @interface CheckSecurity {
     public @interface UOrder {
 
         @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
-        @PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or @ufoodSecurity.getUserId() == returnObject.user.id or @ufoodSecurity.manageRestaurants(returnObject.restaurant.id)")
+        @PostAuthorize("hasAuthority('CHECK_ORDER') or @ufoodSecurity.authenticatedUserIsEqualTo(returnObject.user.id) or @ufoodSecurity.manageRestaurants(returnObject.restaurant.id)")
         @Retention(RUNTIME)
         @Target(METHOD)
         public @interface CanFind {}

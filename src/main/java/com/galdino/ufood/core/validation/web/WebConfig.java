@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -18,14 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     public WebConfig(ApiRetirementHandler apiRetirementHandler) {
         this.apiRetirementHandler = apiRetirementHandler;
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*");
-//                .allowedOrigins("*")
-//                .maxAge(30);
     }
 
     @Override
