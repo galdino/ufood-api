@@ -58,7 +58,7 @@ insert into ugroup (id, name) values (4, 'Recorder');
 
 insert into user (id, name, email, password, register_date) values (1, 'Bob Brown', '9vKb5@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
 insert into user (id, name, email, password, register_date) values (2, 'Maria Green', 'ZLXO3@example.com', '$2a$10$eACCYoNOHEqXve', utc_timestamp);
-insert into user (id, name, email, password, register_date) values (3, 'Alex Green', 'fgaldinoo@gmail.com', '$2a$12$A4HuHJsnSZa1sLB1azkflOaam4pBeEKZkCbp6UpO62lq2dau537t6', utc_timestamp);
+insert into user (id, name, email, password, register_date) values (3, 'Alex Green', 'fgaldinoo@gmail.com', '$2a$12$2w9x/jWhdvBqWw2EazOg5.JISbrA5er8wG4KfPl3JDvODJKIg/hVu', utc_timestamp);
 
 insert into upermission (id, name, description) values (1, 'CHECK_KITCHEN', 'Permission to check the kitchens');
 insert into upermission (id, name, description) values (2, 'EDIT_KITCHEN', 'Permission to edit kitchens');
