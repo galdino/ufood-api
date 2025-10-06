@@ -8,6 +8,7 @@ import com.galdino.ufood.domain.service.ImageStorageService;
 import com.galdino.ufood.infrastructure.service.storage.LocalImageStorageService;
 import com.galdino.ufood.infrastructure.service.storage.S3ImageStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +21,7 @@ public class StorageConfig {
     private StorageProperties storageProperties;
 
     @Bean
+    @ConditionalOnProperty(name = "ufood.storage.type", havingValue = "s3")
     public AmazonS3 amazonS3() {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(storageProperties.getS3().getAccessKeyId(),
                                                                           storageProperties.getS3().getSecretAccessKey());
