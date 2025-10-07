@@ -16,6 +16,7 @@ services:
 
   ufood-api:
     image: ufood-api
+    command: ["/wait-for-it.sh", "ufood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: ufood-mysql
     ports:
