@@ -19,9 +19,19 @@ services:
     command: ["/wait-for-it.sh", "ufood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: ufood-mysql
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8080:8080"
     networks:
       - ufood-network
     depends_on:
       - ufood-mysql
+
+  ufood-proxy:
+    build: ./nginx
+    image: ufood-proxy
+    ports:
+      - "80:80"
+    networks:
+      - ufood-network
+    depends_on:
+      - ufood-api

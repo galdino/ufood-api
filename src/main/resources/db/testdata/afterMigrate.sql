@@ -1,5 +1,10 @@
 set foreign_key_checks = 0;
 
+lock tables kitchen write, state write, city write, restaurant write, payment_method write,
+     upermission write, restaurant_payment_method write, restaurant_user write, product write,
+     ugroup write, user write, ugroup_upermission write, user_ugroup write, uorder write, uorder_item write,
+     product_image write, oauth_client_details write;
+
 delete from kitchen;
 delete from state;
 delete from city;
@@ -139,3 +144,5 @@ insert into oauth_client_details (client_id, resource_ids, client_secret,
 values ('ufood-job', null, '$2a$12$tWejGoMBMI.YFLdAL9a5rekaViri5d97LvT0/RzxFKss1RMTzv4cO',
         'READ,WRITE', 'client_credentials', null, 'CHECK_ORDER,CHECK_REPORT',
         null, null, null);
+
+unlock tables;
