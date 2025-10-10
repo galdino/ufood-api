@@ -14,11 +14,18 @@ services:
     networks:
       - ufood-network
 
+  ufood-redis:
+    image: redis:6.2.1-alpine
+    networks:
+      - ufood-network
+
   ufood-api:
     image: ufood-api
     command: ["/wait-for-it.sh", "ufood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: ufood-mysql
+      SPRING_SESSION_STORE_TYPES: redis
+      SPRING_REDIS_HOST: ufood-redis
 #    ports:
 #      - "8080:8080"
     networks:
